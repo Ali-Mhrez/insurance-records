@@ -15,7 +15,7 @@
 
 @section('form')
 <script src="/vendor/datatables/buttons.server-side.js"></script>
-<form >
+<form action="{{ route('reports.generate') }}">
 <div class="row">
     <div class="form-group col-3">
         <label for="type">نوع السجلات</label>
@@ -102,20 +102,20 @@ $(function() {
  $("#submit").click(function(e) {
         event.preventDefault();
 
-        // let record_type = $('#record_type').val();
-        // let report_type = $('#report_type').val();
-        // let from = $('#from').val();
-        // let to = $('#to').val();
+        let record_type = $('#record_type').val();
+        let report_type = $('#report_type').val();
+        let from = $('#from').val();
+        let to = $('#to').val();
 
         $.ajax({
             url: "{{ route('reports.generate') }}",
             //   type:"POST",
             data:{
                 "_token": "{{ csrf_token() }}",
-                // record_type:record_type,
-                // report_type:report_type,
-                // from:from,
-                // to:to,
+                record_type:record_type,
+                report_type:report_type,
+                from:from,
+                to:to,
             },
             success:function(response){
                 alert('success');

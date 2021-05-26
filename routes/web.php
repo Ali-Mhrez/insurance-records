@@ -33,7 +33,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name("welcome")->middleware('global','auth');
 
-Route::get('/g', function () {
+Route::get('/reports', function () {
     return view('master.generate_reports');
 })->name("master.test")->middleware('auth');
 
@@ -72,9 +72,9 @@ Route::get('/updatePassword', [UpdatePasswordController::class, 'update'])->name
 
 // ----------------------------- Reportscontroller--------------------------------------------------
 
-Route::get('/index_reports', [GenerateReportsController::class,'generateReportsForm'])->name('reports.index');
+Route::get('/reports', [GenerateReportsController::class,'index'])->name('reports.index');
 
-Route::get('/generate_reports', [GenerateReportsController::class,'generate'])->name('reports.generate');
+Route::get('/generate', [GenerateReportsController::class,'generate'])->name('reports.generate');
 });
 
 // --------------------BankController--------------------------------------------
