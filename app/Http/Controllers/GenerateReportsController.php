@@ -45,39 +45,56 @@ class GenerateReportsController extends Controller
                 break;
 
                 case 'الكفالات الممددة':
-                    $guarantees = DB::table('guarantees')
-                    ->join('guarantee_books', 'guarantees.id', '=', 'guarantee_books.guarantee_id')
+
+                    $latest = DB::table('guarantee_books')
+                    ->select('guarantee_id')
+                    ->selectRaw('MAX(created_at) as latest_inserted_book_date')
+                    ->groupBy('guarantee_id');
+
+                    $guarantees = DB::table('guarantee_books')
                     ->where('type','تأمينات')
                     ->where('guarantees.status', 'ممددة من القسم')
-                    ->orWhere('guarantees.status', 'ممددة من البنك')
-                    ->select('guarantees.bidder_name', 'guarantees.value'
+                    ->orwhere('guarantees.status', 'ممددة من النبك')
+                    ->joinSub($latest, 'latest_book', function ($join) {
+                        $join->on('guarantee_books.guarantee_id', '=', 'latest_book.guarantee_id')
+                        ->on('guarantee_books.created_at', '=', 'latest_book.latest_inserted_book_date');
+                    })
+                    ->join('guarantees', 'guarantees.id', '=', 'guarantee_books.guarantee_id')
+                    ->select('guarantees.id', 'guarantees.bidder_name', 'guarantees.value'
                     ,'guarantees.currency','guarantees.equ_val_sy','guarantees.matter','guarantees.number'
                     ,'guarantees.date','guarantees.bank_name','guarantees.merit_date','guarantees.notes'
                     ,'guarantee_books.title as btitle' ,'guarantee_books.issued_by as bissued'
                     ,'guarantee_books.date as bdate', 'guarantee_books.new_merit as bmerit')
                     ->get();
 
-                        $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
+                    $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
-                        $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                        $append_rows = $this->getStats($guarantees);
-                        $this->toPDF($header, $guarantees, $cols, $append_rows);
+                    $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
+                    $append_rows = $this->getStats($guarantees);
+                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'الكفالات المحررة':
+                    // $guarantees = DB::table('guarantees')
+                    // ->join('guarantee_books', 'guarantees.id', '=', 'guarantee_books.guarantee_id')
+                    // ->where('type','تأمينات')
+                    // ->where('guarantees.status', 'محررة')
+
+                    // ->select('guarantees.bidder_name', 'guarantees.value'
+                    // ,'guarantees.currency','guarantees.equ_val_sy','guarantees.matter','guarantees.number'
+                    // ,'guarantees.date','guarantees.bank_name','guarantees.merit_date','guarantees.notes'
+                    // ,'guarantee_books.title as btitle' ,'guarantee_books.issued_by as bissued'
+                    // ,'guarantee_books.date as bdate', 'guarantee_books.new_merit as bmerit')
+                    // ->groupBy('guarantees.id')
+                    // ->get();
+
                     $guarantees = DB::table('guarantees')
                     ->join('guarantee_books', 'guarantees.id', '=', 'guarantee_books.guarantee_id')
                     ->where('type','تأمينات')
                     ->where('guarantees.status', 'محررة')
-
-                    ->select('guarantees.bidder_name', 'guarantees.value'
-                    ,'guarantees.currency','guarantees.equ_val_sy','guarantees.matter','guarantees.number'
-                    ,'guarantees.date','guarantees.bank_name','guarantees.merit_date','guarantees.notes'
-                    ,'guarantee_books.title as btitle' ,'guarantee_books.issued_by as bissued'
-                    ,'guarantee_books.date as bdate', 'guarantee_books.new_merit as bmerit')
-                    ->groupBy('guarantees.id')
                     ->get();
 
+                    dd($guarantees);
                         $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                         $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
