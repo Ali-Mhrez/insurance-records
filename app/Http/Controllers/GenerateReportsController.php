@@ -29,10 +29,10 @@ class GenerateReportsController extends Controller
         $this->title = "<h6 id='report-title'>" . "التقرير الخاص ب"
         . $report_type .
         " في السجلات " .
-        ($record_type == 'initial' ? "البدائية": "النهائية") . 
+        ($record_type == 'initial' ? "البدائية": "النهائية") .
         " من تاريخ " . $from .
         " إلى تاريخ " . $to ."</h6>";
-        // $this->title = "التقرير الخاص بالسجلات " . ($record_type == 'inital' ? "النهائية": "البدائية") . 
+        // $this->title = "التقرير الخاص بالسجلات " . ($record_type == 'inital' ? "النهائية": "البدائية") .
         // "نوعها " . $report_type . "من تاريخ " . $from . "إلى تاريخ " . $to;
         // $this->title = "<div class='rr'>" . " نوع السجل: " . ($record_type == 'inital' ? "نهائي": "بدائي") . "</div>";
         // $this->title .= "<div class='rr'>" . " نوع التقرير: " . $report_type . "</div>";
@@ -849,20 +849,20 @@ class GenerateReportsController extends Controller
                             width: 100%;
                         }
                         #tab td,#tab th{
-                            border: 2px solid blue;
+                            border: 1px solid  #151B54;
                             text-align: center;
-                            color: green;
+                            color: #0C090A;
                         }
                         #tab th{
                             padding-top: 12px;
                             padding-bottom: 12px;
                             text-align: center;
-                            color: yellow;
+
                         }
                         #report-title {
                             font-size: 13px;
                             padding-bottom: 6px;
-                            color: red;
+                            color: #800517;
                         }
                     </style>
                 </head><body>" . $this->title .

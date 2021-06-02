@@ -103,7 +103,7 @@
                             </form>
                         </div>
 
-                        <div class="tab-pane active" id="second">
+                        <div class="tab-pane" id="second">
                             second
                         </div>
                         <div class="tab-pane" id="third">
@@ -113,7 +113,7 @@
                             fourth
                         </div>
                         <div class="tab-pane" id="fifth">
-                            fourth
+                            fifth
                         </div>
 
                     </div>
