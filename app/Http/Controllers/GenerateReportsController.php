@@ -17,6 +17,8 @@ class GenerateReportsController extends Controller
         return view('reports.index');
     }
 
+    private $title = "";
+
     public function generate(Request $request)
     {
         $record_type = $request->record_type;
@@ -24,6 +26,18 @@ class GenerateReportsController extends Controller
         $from = $request->from;
         $to = $request->to;
 
+        $this->title = "<h6 id='report-title'>" . "التقرير الخاص ب"
+        . $report_type .
+        " في السجلات " .
+        ($record_type == 'initial' ? "البدائية": "النهائية") . 
+        " من تاريخ " . $from .
+        " إلى تاريخ " . $to ."</h6>";
+        // $this->title = "التقرير الخاص بالسجلات " . ($record_type == 'inital' ? "النهائية": "البدائية") . 
+        // "نوعها " . $report_type . "من تاريخ " . $from . "إلى تاريخ " . $to;
+        // $this->title = "<div class='rr'>" . " نوع السجل: " . ($record_type == 'inital' ? "نهائي": "بدائي") . "</div>";
+        // $this->title .= "<div class='rr'>" . " نوع التقرير: " . $report_type . "</div>";
+        // $this->title .= "<div class='rr'>" . " من: " . $from . "</div>";
+        // $this->title .= "<div class='rr'>" . " إلى: " . $to . "</div>";
 
         if ($record_type == 'initial') {
             switch ($report_type) {
@@ -835,24 +849,31 @@ class GenerateReportsController extends Controller
                             width: 100%;
                         }
                         #tab td,#tab th{
-                            border: 1px solid #ddd;
+                            border: 2px solid blue;
                             text-align: center;
+                            color: green;
                         }
                         #tab th{
                             padding-top: 12px;
                             padding-bottom: 12px;
                             text-align: center;
+                            color: yellow;
+                        }
+                        #report-title {
+                            font-size: 13px;
+                            padding-bottom: 6px;
+                            color: red;
                         }
                     </style>
-                </head><body>
-                <table id='tab' cellspacing='2' cellpadding='5'>" .
+                </head><body>" . $this->title .
+                "<table id='tab' cellspacing='2' cellpadding='5'>" .
                         $funny($header, $array_data, $cols, $append_rows) .
                 "</table></body></html>";
 
         $dompdf = new Dompdf();
         $options = $dompdf->getOptions();
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A3', 'landscape');
+        $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
         $dompdf->stream();
     }
