@@ -9,95 +9,120 @@
     <li class="breadcrumb-item active">توليد تقارير <i class="fa fa-file-pdf"></i></li>
     <li class="breadcrumb-item"><a href="/">الرئيسية <i class="fa fa-tachometer-alt"></i></a></li>
 @endsection
-@section('card-title')
-    معلومات التقرير
-@endsection
+
 
 @section('form')
-<script src="/vendor/datatables/buttons.server-side.js"></script>
-<form action="{{ route('reports.generate') }}">
-<div class="row">
-    <div class="form-group col-3">
-        <label for="type">نوع السجلات</label>
-        <select class="form-control @error('type') is-invalid @enderror" id="record_type" name="record_type">
-            {{ $insurance_array[''] = '- اختر النوع -' }}
-            {{ $insurance_array['initial'] = 'بدائية' }}
-            {{ $insurance_array['final'] = 'نهائية' }}
-            @foreach ($insurance_array as $key => $value)
-                <option value="{{ $key }}" @if ($key == old('type'))
-                    selected="selected"
-            @endif
-            >{{ $value }}</option>
-            @endforeach
-        </select>
-        @error('type')
-            <li class=" alert alert-danger">{{ $message }}</li>
-        @enderror
+    <div class="card card-navy">
+        <div class="card-header d-flex p-3">
+            <label class=" col-form-label text-md-right">التقارير</label>
+            <ul class="nav nav-pills ml-auto p-2">
+                <li class="nav-item"><a class="nav-link active" href="#first" data-toggle="tab">التقارير التفصيلية</a></li>
+                <li class="nav-item"><a class="nav-link" href="#second" data-toggle="tab">التقرير الكلي</a></li>
+                <li class="nav-item"><a class="nav-link" href="#third" data-toggle="tab">التقارير المستحقة</a></li>
+                <li class="nav-item"><a class="nav-link" href="#fourth" data-toggle="tab">التقارير الشاملة</a></li>
+                <li class="nav-item"><a class="nav-link" href="#fifth" data-toggle="tab">تقارير (تمديد - تجديد)</a></li>
+            </ul>
+        </div><!-- /.card-header -->
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="first">
+                            <form action="{{ route('reports.generate') }}">
+                                <div class="row">
+                                    <div class="form-group col-3">
+                                        <label for="type">نوع السجلات</label>
+                                        <select class="form-control @error('type') is-invalid @enderror" id="record_type"
+                                            name="record_type">
+                                            {{ $insurance_array[''] = '- اختر النوع -' }}
+                                            {{ $insurance_array['initial'] = 'بدائية' }}
+                                            {{ $insurance_array['final'] = 'نهائية' }}
+                                            @foreach ($insurance_array as $key => $value)
+                                                <option value="{{ $key }}" @if ($key == old('type')) selected="selected" @endif>
+                                                    {{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('type')
+                                            <li class=" alert alert-danger">{{ $message }}</li>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label for="type">نوع التقرير</label>
+                                        <select class="form-control @error('type') is-invalid @enderror" id="report_type"
+                                            name="report_type">
+                                            {{ $report_array[''] = '- اختر النوع -' }}
+                                            {{ $report_array['الكفالات المدخلة'] = 'الكفالات المدخلة' }}
+                                            {{ $report_array['الكفالات الممددة'] = 'الكفالات الممددة' }}
+                                            {{ $report_array['الكفالات المحررة'] = 'الكفالات المحررة' }}
+                                            {{ $report_array['الكفالات المصادرة'] = 'الكفالات المصادرة' }}
+                                            {{ $report_array['الكفالات المسيلة'] = 'الكفالات المسيلة' }}
+
+                                            {{ $report_array['كفالات السلف المدخلة'] = 'كفالات السلف المدخلة' }}
+                                            {{ $report_array['كفالات السلف الممددة'] = 'كفالات السلف الممدة' }}
+                                            {{ $report_array['كفالات السلف المصادرة'] = 'كفالات السلف المصادرة' }}
+                                            {{ $report_array['كفالات السلف المحررة'] = 'كفالات السلف المحررة' }}
+                                            {{ $report_array['كفالات السلف المسيلة'] = 'كفالات السلف المسيلة' }}
+
+                                            {{ $report_array['الشيكات المدخلة'] = 'الشيكات المدخلة' }}
+                                            {{ $report_array['الشيكات المحررة'] = 'الشيكات المحررة' }}
+
+                                            {{ $report_array['الدفعات المدخلة'] = 'الدفعات المدخلة' }}
+                                            {{ $report_array['الدفعات المحررة'] = 'الدفعات المحررة' }}
+                                            @foreach ($report_array as $key => $value)
+                                                <option value="{{ $key }}" @if ($key == old('type')) selected="selected" @endif>
+                                                    {{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('type')
+                                            <li class=" alert alert-danger">{{ $message }}</li>
+                                        @enderror
+                                    </div>
+
+
+                                    <!-- select -->
+                                    <div class="form-group col-3">
+                                        <label for="date">من</label>
+                                        <input type="date" class="form-control @error('date') is-invalid @enderror"
+                                            id="from" name="from" value="{{ old('date') }}">
+                                    </div>
+
+
+                                    <div class="form-group col-3">
+                                        <label for="date">إلى</label>
+                                        <input type="date" class="form-control @error('date') is-invalid @enderror" id="to"
+                                            name="to" value="{{ old('date') }}">
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">تأكيد</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane active" id="second">
+                            second
+                        </div>
+                        <div class="tab-pane" id="third">
+                            third
+                        </div>
+                        <div class="tab-pane" id="fourth">
+                            fourth
+                        </div>
+                        <div class="tab-pane" id="fifth">
+                            fourth
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-body -->
     </div>
-    <div class="form-group col-3">
-        <label for="type">نوع التقرير</label>
-        <select class="form-control @error('type') is-invalid @enderror" id="report_type" name="report_type">
-            {{ $report_array[''] = '- اختر النوع -' }}
-            {{ $report_array['الكفالات المدخلة'] = 'الكفالات المدخلة' }}
-            {{ $report_array['الكفالات الممددة'] = 'الكفالات الممددة' }}
-            {{ $report_array['الكفالات المحررة'] = 'الكفالات المحررة' }}
-            {{ $report_array['الكفالات المصادرة'] = 'الكفالات المصادرة' }}
-            {{ $report_array['الكفالات المسيلة'] = 'الكفالات المسيلة' }}
-
-            {{ $report_array['كفالات السلف المدخلة'] = 'كفالات السلف المدخلة' }}
-            {{ $report_array['كفالات السلف الممددة'] = 'كفالات السلف الممدة' }}
-            {{ $report_array['كفالات السلف المصادرة'] = 'كفالات السلف المصادرة' }}
-            {{ $report_array['كفالات السلف المحررة'] = 'كفالات السلف المحررة' }}
-            {{ $report_array['كفالات السلف المسيلة'] = 'كفالات السلف المسيلة' }}
-
-            {{ $report_array['الشيكات المدخلة'] = 'الشيكات المدخلة' }}
-            {{ $report_array['الشيكات المحررة'] = 'الشيكات المحررة' }}
-
-            {{ $report_array['الدفعات المدخلة'] = 'الدفعات المدخلة' }}
-            {{ $report_array['الدفعات المحررة'] = 'الدفعات المحررة' }}
-            @foreach ($report_array as $key => $value)
-                <option value="{{ $key }}" @if ($key == old('type'))
-                    selected="selected"
-            @endif
-            >{{ $value }}</option>
-            @endforeach
-        </select>
-        @error('type')
-            <li class=" alert alert-danger">{{ $message }}</li>
-        @enderror
-    </div>
-
-    <div class="col-sm-3">
-      <!-- select -->
-      <div class="form-group">
-        <label for="date">من</label>
-            <input type="date" class="form-control @error('date') is-invalid @enderror" id="from" name="from" value="{{ old('date') }}">
-      </div>
-    </div>
-    <div class="col-sm-3">
-      <div class="form-group">
-        <label for="date">إلى</label>
-            <input type="date" class="form-control @error('date') is-invalid @enderror" id="to" name="to" value="{{ old('date') }}">
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-4">
-
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">تأكيد</button>
-    </div>
-</div>
-</form>
-<button id="submit" type="submit" class="btn btn-primary">تأكيد</button>
-
-<div class="row">
-<table id="table" class="table table-bordered table-striped table-hover table-sm" style="text-align:center;align-items:center;justify-content:center;">
-</div>
-</table>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js"></script>
-<script>
+    {{-- <script>
 $(function() {
  $("#submit").click(function(e) {
         event.preventDefault();
@@ -162,10 +187,10 @@ $(function() {
     function createTable(record_type, report_type, response) {
 
         var tbl = document.getElementById('table');
-        
+
         var thead = document.createElement('thead');
         tbl.appendChild(thead);
-        
+
         var tbody = document.createElement('tbody');
         tbl.appendChild(tbody);
 
@@ -175,11 +200,11 @@ $(function() {
         var td1 = document.createElement('td');
         td1.appendChild(document.createTextNode('#'));
         tr.appendChild(td1);
-        
+
         var td2 = document.createElement('td');
         td2.appendChild(document.createTextNode('اسم العارض'));
         tr.appendChild(td2);
-        
+
         var td3 = document.createElement('td');
         td3.appendChild(document.createTextNode('القيمة'));
         tr.appendChild(td3);
@@ -187,7 +212,7 @@ $(function() {
         var td4 = document.createElement('td');
         td4.appendChild(document.createTextNode('العملة'));
         tr.appendChild(td4);
-        
+
         var td5 = document.createElement('td');
         td5.appendChild(document.createTextNode('المكافئ بالليرة السورية'));
         tr.appendChild(td5);
@@ -242,7 +267,6 @@ $(function() {
         return columns;
     }
 });
-</script>
-
+</script> --}}
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 @endsection
-
