@@ -5,21 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\User;
 
 use Illuminate\Http\Request;
-use DataTables;
 use Illuminate\Support\Facades\DB;
-use App\Models\Guarantee;
 use Dompdf\Dompdf;
+use Illuminate\Support\Carbon;
 
 class GenerateReportsController extends Controller
 {
+
+    private $title = "";
+
+
     public function index()
     {
         return view('reports.index');
     }
 
-    private $title = "";
-
-    public function generate(Request $request)
+    public function detailed_reports(Request $request)
     {
         $record_type = $request->record_type;
         $report_type = $request->report_type;
@@ -32,12 +33,6 @@ class GenerateReportsController extends Controller
         ($record_type == 'initial' ? "البدائية": "النهائية") .
         " من تاريخ " . $from .
         " إلى تاريخ " . $to ."</h6>";
-        // $this->title = "التقرير الخاص بالسجلات " . ($record_type == 'inital' ? "النهائية": "البدائية") .
-        // "نوعها " . $report_type . "من تاريخ " . $from . "إلى تاريخ " . $to;
-        // $this->title = "<div class='rr'>" . " نوع السجل: " . ($record_type == 'inital' ? "نهائي": "بدائي") . "</div>";
-        // $this->title .= "<div class='rr'>" . " نوع التقرير: " . $report_type . "</div>";
-        // $this->title .= "<div class='rr'>" . " من: " . $from . "</div>";
-        // $this->title .= "<div class='rr'>" . " إلى: " . $to . "</div>";
 
         if ($record_type == 'initial') {
             switch ($report_type) {
@@ -49,10 +44,10 @@ class GenerateReportsController extends Controller
                         ->where('date', '<=', $to)
                         ->get();
 
-                    $header = ['الملاحظات','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع',
-                    'المعادل السوري','العملة','القيمة','اسم العارض'];
+                        $header = ['الملاحظات','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
-                    $cols = ['notes','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
+                        $cols = ['notes','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
+
 
                     $append_rows = $this->getStats($guarantees);
                     $this->toPDF($header, $guarantees, $cols, $append_rows);
@@ -783,6 +778,70 @@ class GenerateReportsController extends Controller
         }
     }
 
+
+    public function summary_reports (Request $request)
+    {
+        $record_type = $request->record_type;
+
+        $this->title = "<h6 id='report-title'>" . "التقرير الكلي للسجلات "
+        .($record_type == 'initial' ? "البدائية": "النهائية")
+         ."</h6>";
+         $this->title.="<h6> التاريخ: ".Carbon::now()->toDateString()."</h6>";
+
+        if ($record_type == 'initial') {
+            $guarantees = DB::table('guarantees')
+                        ->where('guarantees.type','تأمينات')
+                        ->where(function ($query){
+                            $query ->where('guarantees.status', 'مدخلة')
+                            ->orwhere('guarantees.status', 'ممددة من القسم')
+                            ->orwhere('guarantees.status', 'ممددة من البنك');
+                        })
+                        ->select('guarantees.value','guarantees.currency','guarantees.equ_val_sy')
+                        ->get();
+
+            $fguarantees = DB::table('fguarantees')
+                        ->where('fguarantees.type','تأمينات')
+                        ->where(function ($query){
+                            $query ->where('fguarantees.status', 'مدخلة')
+                            ->orwhere('fguarantees.status', 'ممددة من القسم')
+                            ->orwhere('fguarantees.status', 'ممددة من البنك');
+                        })
+                        ->select('fguarantees.value','fguarantees.currency','fguarantees.equ_val_sy')
+                        ->get();
+
+            $checks = DB::table('checks')
+                        ->where('status','مدخل')
+                        ->select('checks.value','checks.currency','checks.equ_val_sy')
+                        ->get();
+
+            $fchecks = DB::table('fchecks')
+                        ->where(function ($query){
+                            $query ->where('status', 'مدخل')
+                            ->orwhere('status', 'مجدد');
+                        })
+                        ->select('fchecks.value','fchecks.currency','fchecks.equ_val_sy')
+                        ->get();
+
+            $payments = DB::table('cash_payment_and_remittance_insurances')
+                        ->where('status','مدخلة')
+                        ->select('value','currency','equ_val_sy')
+                        ->get();
+
+            $fpayments = DB::table('fpayments')
+                        ->where('status','مدخلة')
+                        ->select('value','currency','equ_val_sy')
+                        ->get();
+                        $data=$guarantees->concat($checks)->concat($payments)->concat($fguarantees)->concat($fchecks)->concat($fpayments);
+                      //  dd($data);
+                        $header = [];
+                        $cols = [];
+                        $append_rows = $this->getStats($data);
+                        $this->toPDF($header, $data, $cols, $append_rows);
+
+        }
+
+    }
+
     public function getStats($data) {
         $stats = [];
         $total = 0;
@@ -802,17 +861,23 @@ class GenerateReportsController extends Controller
     public function toPDF($header, $data, $cols, $append_rows) {
 
         $funny = function($header, $rows, $cols, $append_rows=[]){
-            $fun_string = "<thead><tr>";
+            $fun_string = "<thead>";
+            if (count($header)!=0){
+                $fun_string .= "<tr>";
             foreach($header as $head){
                 $fun_string .= "<th>" . $head . "</th>";
             }
-            $fun_string .= "</tr></thead>";
+            $fun_string .= "</tr>";
+        }
+            $fun_string .= "</thead>";
 
             if (count($rows) == 0) {
                 return $fun_string."<tbody><tr><td colspan=".count($cols).">لايوجد بيانات لعرضها</td></tr></tbody>";
             }
 
+
             $fun_string .= "<tbody>";
+            if (count($cols) != 0) {
             foreach($rows as $row) {
                 $fun_string .= "<tr>";
                 foreach($cols as $col) {
@@ -823,7 +888,7 @@ class GenerateReportsController extends Controller
                     $fun_string .= "<td>". $row[$col] ."</td>";
                 }
                 $fun_string .= "</tr>";
-            }
+            }}
 
             foreach($append_rows as $key => $value) {
                 $fun_string .= "<tr>";
@@ -860,10 +925,12 @@ class GenerateReportsController extends Controller
 
                         }
                         #report-title {
-                            font-size: 13px;
+                            text-align: center;
+                            font-size: x-large;
                             padding-bottom: 6px;
                             color: #800517;
                         }
+
                     </style>
                 </head><body>" . $this->title .
                 "<table id='tab' cellspacing='2' cellpadding='5'>" .
@@ -877,6 +944,8 @@ class GenerateReportsController extends Controller
         $dompdf->render();
         $dompdf->stream();
     }
+
+
 }
 
 

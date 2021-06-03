@@ -74,7 +74,9 @@ Route::get('/updatePassword', [UpdatePasswordController::class, 'update'])->name
 
 Route::get('/reports', [GenerateReportsController::class,'index'])->name('reports.index');
 
-Route::get('/generate', [GenerateReportsController::class,'generate'])->name('reports.generate');
+Route::get('/generate_detailed_reports', [GenerateReportsController::class,'detailed_reports'])->name('reports.detailed_reports');
+
+Route::get('/generate_summary_reports', [GenerateReportsController::class,'summary_reports'])->name('reports.summary_reports');
 });
 
 // --------------------BankController--------------------------------------------

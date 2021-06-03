@@ -29,7 +29,7 @@
                 <div class="form-group">
                     <div class="tab-content">
                         <div class="tab-pane active" id="first">
-                            <form action="{{ route('reports.generate') }}">
+                            <form action="{{ route('reports.detailed_reports') }}">
                                 <div class="row">
                                     <div class="form-group col-3">
                                         <label for="type">نوع السجلات</label>
@@ -79,8 +79,6 @@
                                         @enderror
                                     </div>
 
-
-                                    <!-- select -->
                                     <div class="form-group col-3">
                                         <label for="date">من</label>
                                         <input type="date" class="form-control @error('date') is-invalid @enderror"
@@ -95,7 +93,7 @@
                                     </div>
 
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="row justify-content-center">
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary">تأكيد</button>
                                     </div>
@@ -104,7 +102,31 @@
                         </div>
 
                         <div class="tab-pane" id="second">
-                            second
+                            <form action="{{ route('reports.summary_reports') }}">
+                                <div class="row justify-content-center">
+                                    <div class="form-group col-md-6">
+                                        <label for="type">نوع السجلات</label>
+                                        <select class="form-control @error('type') is-invalid @enderror" id="record_type"
+                                            name="record_type">
+                                            {{ $insurance_array[''] = '- اختر النوع -' }}
+                                            {{ $insurance_array['initial'] = 'بدائية' }}
+                                            {{ $insurance_array['final'] = 'نهائية' }}
+                                            @foreach ($insurance_array as $key => $value)
+                                                <option value="{{ $key }}" @if ($key == old('type')) selected="selected" @endif>
+                                                    {{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('type')
+                                            <li class=" alert alert-danger">{{ $message }}</li>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary">تأكيد</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div class="tab-pane" id="third">
                             third
