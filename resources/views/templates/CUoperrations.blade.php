@@ -32,6 +32,12 @@
 
 @yield('scripts')
 <script type="text/javascript">
+ $(document).ready(function() {
+        showEquValOnLoad();
+        showBankNameOnLoad();
+    })
+
+
     function showEquVal(value) {
         var currency = document.getElementById("currency");
         if (value == "ليرة سورية") {
@@ -123,9 +129,6 @@
         }
     }
 
-    $(document).ready(function() {
-        showEquValOnLoad();
-        showBankNameOnLoad();
-    })
+
 </script>
 @stop

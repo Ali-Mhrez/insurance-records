@@ -817,6 +817,30 @@ class GenerateReportsController extends Controller
                         ->select('guarantees.value','guarantees.currency','guarantees.equ_val_sy')
                         ->get();
 
+
+            $checks = DB::table('checks')
+                        ->where('status','مدخل')
+                        ->select('checks.value','checks.currency','checks.equ_val_sy')
+                        ->get();
+
+
+
+            $payments = DB::table('cash_payment_and_remittance_insurances')
+                        ->where('status','مدخلة')
+                        ->select('value','currency','equ_val_sy')
+                        ->get();
+
+
+                        $data=$guarantees->concat($checks)->concat($payments);
+                      //  dd($data);
+                        $header = [];
+                        $cols = [];
+                        $append_rows = $this->getStats($data);
+                        $this->toPDF($header, $data, $cols, $append_rows);
+
+        }
+        if ($record_type == 'final') {
+
             $fguarantees = DB::table('fguarantees')
                         ->where('fguarantees.type','تأمينات')
                         ->where(function ($query){
@@ -827,10 +851,6 @@ class GenerateReportsController extends Controller
                         ->select('fguarantees.value','fguarantees.currency','fguarantees.equ_val_sy')
                         ->get();
 
-            $checks = DB::table('checks')
-                        ->where('status','مدخل')
-                        ->select('checks.value','checks.currency','checks.equ_val_sy')
-                        ->get();
 
             $fchecks = DB::table('fchecks')
                         ->where(function ($query){
@@ -840,16 +860,12 @@ class GenerateReportsController extends Controller
                         ->select('fchecks.value','fchecks.currency','fchecks.equ_val_sy')
                         ->get();
 
-            $payments = DB::table('cash_payment_and_remittance_insurances')
-                        ->where('status','مدخلة')
-                        ->select('value','currency','equ_val_sy')
-                        ->get();
 
             $fpayments = DB::table('fpayments')
                         ->where('status','مدخلة')
                         ->select('value','currency','equ_val_sy')
                         ->get();
-                        $data=$guarantees->concat($checks)->concat($payments)->concat($fguarantees)->concat($fchecks)->concat($fpayments);
+                        $data=$fguarantees->concat($fchecks)->concat($fpayments);
                       //  dd($data);
                         $header = [];
                         $cols = [];
@@ -857,8 +873,83 @@ class GenerateReportsController extends Controller
                         $this->toPDF($header, $data, $cols, $append_rows);
 
         }
-
     }
+
+
+    public function comprehensive_reports(Request $request)
+    {
+        $report_type = $request->report_type;
+
+        $this->title = "<h6 id='report-title'>" . "التقرير الشامل لـ " . $report_type . "</h6>";
+        $this->title .= "<h6> التاريخ: " . Carbon::now()->toDateString() . "</h6>";
+
+        if ($report_type == 'الكفالات') {
+            $guarantees = DB::table('guarantees')
+            ->where('guarantees.type', 'تأمينات')
+            ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_name', 'status', 'notes')
+            ->get();
+
+            $fguarantees = DB::table('fguarantees')
+            ->where('fguarantees.type', 'تأمينات')
+            ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_name', 'status', 'notes')
+            ->get();
+
+
+            $data = $guarantees->concat($fguarantees);
+            //  dd($data);
+            $header = ['الحالة', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
+
+            $cols = ['status', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+            $append_rows = $this->getStats($data);
+            $this->toPDF($header, $data, $cols, $append_rows);
+        }
+
+        if ($report_type == 'الشيكات') {
+            $checks = DB::table('checks')
+            ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_name', 'status', 'notes')
+            ->get();
+
+            $fchecks = DB::table('fchecks')
+            ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_name', 'status', 'notes')
+            ->get();
+
+
+            $data = $checks->concat($fchecks);
+            //  dd($data);
+            $header = ['الحالة', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف', 'الرقم', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
+
+            $cols = ['status', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+            $append_rows = $this->getStats($data);
+            $this->toPDF($header, $data, $cols, $append_rows);
+        }
+
+        if ($report_type == 'الدفعات النقدية | الحوالات') {
+            $cash_payment_and_remittance_insurances = DB::table('cash_payment_and_remittance_insurances')
+            ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'bank_name', 'status','type', 'notes')
+            ->get();
+
+            $fpayments = DB::table('fpayments')
+            ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date','bank_name', 'status','type' ,'notes')
+            ->get();
+
+
+            $data = $cash_payment_and_remittance_insurances->concat($fpayments);
+            //  dd($data);
+            $header = ['الحالة','النوع', 'تاريخ التقديم', 'اسم المصرف', 'الرقم', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
+
+            $cols = ['status','type', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+            $append_rows = $this->getStats($data);
+            $this->toPDF($header, $data, $cols, $append_rows);
+        }
+    }
+
+
+
+
+
+
+
+
 
     public function getStats($data) {
         $stats = [];

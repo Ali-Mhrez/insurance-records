@@ -150,6 +150,5 @@
 @section('scripts')
     <script>
         var currency_value = '{{ old('equ_val_sy') }}';
-
     </script>
 @endsection
