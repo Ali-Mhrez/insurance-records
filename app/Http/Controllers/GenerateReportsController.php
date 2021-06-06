@@ -21,7 +21,7 @@ class GenerateReportsController extends Controller
     }
 
     public function detailed_reports(Request $request)
-    {
+    {dd($request->report);
         $record_type = $request->record_type;
         $report_type = $request->report_type;
         $from = $request->from;
@@ -942,10 +942,6 @@ class GenerateReportsController extends Controller
             $this->toPDF($header, $data, $cols, $append_rows);
         }
     }
-
-
-
-
 
 
 

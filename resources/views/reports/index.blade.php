@@ -28,6 +28,7 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <div class="tab-content">
+
                         <div class="tab-pane active" id="first">
                             <form action="{{ route('reports.detailed_reports') }}">
                                 <div class="row">
@@ -94,9 +95,22 @@
 
                                 </div>
                                 <div class="row justify-content-center">
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary">تأكيد</button>
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf"
+                                            value="pdf">
+                                        <label for="pdf" class="custom-control-label">PDF</label>
                                     </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel"
+                                            value="excel">
+                                        <label for="excel" class="custom-control-label">Excel</label>
+                                    </div>
+
+                                </div>
+                                <div class="row justify-content-center mt-3">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-lg">تأكيد</button>
+                                </div>
                                 </div>
                             </form>
                         </div>
