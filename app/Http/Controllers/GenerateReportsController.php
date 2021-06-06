@@ -55,6 +55,24 @@ class GenerateReportsController extends Controller
 
                 case 'الكفالات الممددة':
 
+                    // the correct way of doing it
+                    // $res = collect($guarantees)->map(function($collection, $key) {
+
+                    //     $book = DB::table('guarantee_books')
+                    //     ->where('guarantee_id', '=', $collection->id)
+                    //     ->latest()
+                    //     ->limit(1)
+                    //     ->get();
+
+                    //     if (count($book) > 0) {
+                    //         $collection->btitle = $book[0]->title;
+                    //         $collection->bissued = $book[0]->issued_by;
+                    //         $collection->bdate = $book[0]->date;
+                    //         $collection->bmerit = $book[0]->new_merit;
+                    //     }
+                    //     return $collection;
+                    // });
+
                     $latest = DB::table('guarantee_books')
                     ->select('guarantee_id')
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
