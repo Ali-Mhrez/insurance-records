@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Dompdf\Dompdf;
 use Illuminate\Support\Carbon;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class GenerateReportsController extends Controller
 {
@@ -37,20 +39,17 @@ class GenerateReportsController extends Controller
         if ($record_type == 'initial') {
             switch ($report_type) {
                 case 'الكفالات المدخلة':
-                    $guarantees = DB::table('guarantees')
+                    $data = DB::table('guarantees')
                         ->where('type','تأمينات')
                         ->where('status', 'مدخلة')
                         ->where('date', '>=', $from)
                         ->where('date', '<=', $to)
                         ->get();
 
-                        $header = ['الملاحظات','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
+                    $header = ['الملاحظات','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
-                        $cols = ['notes','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
+                    $cols = ['notes','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
 
-
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'الكفالات الممددة':
@@ -78,7 +77,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('guarantee_id');
 
-                    $guarantees = DB::table('guarantee_books')
+                    $data = DB::table('guarantee_books')
                     ->where('type','تأمينات')
                     ->where('guarantees.date', '>=', $from)
                     ->where('guarantees.date', '<=', $to)
@@ -101,8 +100,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'الكفالات المحررة':
@@ -111,7 +108,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('guarantee_id');
 
-                    $guarantees = DB::table('guarantee_books')
+                    $data = DB::table('guarantee_books')
                     ->where('type','تأمينات')
                     ->where('guarantees.date', '>=', $from)
                     ->where('guarantees.date', '<=', $to)
@@ -131,8 +128,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'الكفالات المصادرة':
@@ -141,7 +136,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('guarantee_id');
 
-                    $guarantees = DB::table('guarantee_books')
+                    $data = DB::table('guarantee_books')
                     ->where('type','تأمينات')
                     ->where('guarantees.date', '>=', $from)
                     ->where('guarantees.date', '<=', $to)
@@ -161,8 +156,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'الكفالات المسيلة':
@@ -171,7 +164,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('guarantee_id');
 
-                    $guarantees = DB::table('guarantee_books')
+                    $data = DB::table('guarantee_books')
                     ->where('type','تأمينات')
                     ->where('guarantees.date', '>=', $from)
                     ->where('guarantees.date', '<=', $to)
@@ -191,12 +184,10 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'كفالات السلف المدخلة':
-                    $guarantees = DB::table('guarantees')
+                    $data = DB::table('guarantees')
                         ->where('type','سلف')
                         ->where('status', 'مدخلة')
                         ->where('date', '>=', $from)
@@ -207,8 +198,6 @@ class GenerateReportsController extends Controller
 
                     $cols = ['notes','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
 
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'كفالات السلف الممددة':
@@ -217,7 +206,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('guarantee_id');
 
-                    $guarantees = DB::table('guarantee_books')
+                    $data = DB::table('guarantee_books')
                     ->where('type','سلف')
                     ->where('guarantees.date', '>=', $from)
                     ->where('guarantees.date', '<=', $to)
@@ -240,8 +229,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'كفالات السلف المصادرة':
@@ -250,7 +237,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('guarantee_id');
 
-                    $guarantees = DB::table('guarantee_books')
+                    $data = DB::table('guarantee_books')
                     ->where('type','سلف')
                     ->where('guarantees.date', '>=', $from)
                     ->where('guarantees.date', '<=', $to)
@@ -270,8 +257,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'كفالات السلف المحررة':
@@ -280,7 +265,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('guarantee_id');
 
-                    $guarantees = DB::table('guarantee_books')
+                    $data = DB::table('guarantee_books')
                     ->where('type','سلف')
                     ->where('guarantees.date', '>=', $from)
                     ->where('guarantees.date', '<=', $to)
@@ -300,8 +285,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'كفالات السلف المسيلة':
@@ -310,7 +293,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('guarantee_id');
 
-                    $guarantees = DB::table('guarantee_books')
+                    $data = DB::table('guarantee_books')
                     ->where('type','سلف')
                     ->where('guarantees.date', '>=', $from)
                     ->where('guarantees.date', '<=', $to)
@@ -330,12 +313,10 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'الشيكات المدخلة':
-                    $checks = DB::table('checks')
+                    $data = DB::table('checks')
                     ->where('status', 'مدخل')
                     ->where('checks.date', '>=', $from)
                     ->where('checks.date', '<=', $to)
@@ -343,8 +324,6 @@ class GenerateReportsController extends Controller
 
                 $header = ['اسم المصرف','رقم الشيك','موضوع العرض | المناقصة','المعادل السوري','نوع العملة','قيمة التأمينات','اسم العارض'];
                 $cols = ['bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                $append_rows = $this->getStats($checks);
-                $this->toPDF($header, $checks, $cols, $append_rows);
                 break;
 
                 case 'الشيكات المحررة':
@@ -353,7 +332,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('check_id');
 
-                    $checks = DB::table('check_books')
+                    $data = DB::table('check_books')
                     ->where('checks.status', 'محرر')
                     ->where('checks.date', '>=', $from)
                     ->where('checks.date', '<=', $to)
@@ -372,13 +351,11 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','اسم المصرف الكفيل','رقم الشيك','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($checks);
-                    $this->toPDF($header, $checks, $cols, $append_rows);
                     break;
 
 
                 case 'الدفعات المدخلة':
-                    $checks = DB::table('cash_payment_and_remittance_insurances')
+                    $data = DB::table('cash_payment_and_remittance_insurances')
                     ->where('status', 'مدخلة')
                     ->where('date', '>=', $from)
                     ->where('date', '<=', $to)
@@ -388,8 +365,6 @@ class GenerateReportsController extends Controller
 
                     $cols = ['date','number','matter','equ_val_sy','currency','value','bidder_name'];
 
-                $append_rows = $this->getStats($checks);
-                $this->toPDF($header, $checks, $cols, $append_rows);
                 break;
 
                 case 'الدفعات المحررة':
@@ -398,7 +373,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('payment_id');
 
-                    $checks = DB::table('payment_and_remittance_books')
+                    $data = DB::table('payment_and_remittance_books')
                     ->where('cash_payment_and_remittance_insurances.status', 'محررة')
                     ->where('cash_payment_and_remittance_insurances.date', '>=', $from)
                     ->where('cash_payment_and_remittance_insurances.date', '<=', $to)
@@ -417,8 +392,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','اسم المصرف الكفيل','رقم الدفعة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($checks);
-                    $this->toPDF($header, $checks, $cols, $append_rows);
                 break;
             }
         }
@@ -426,7 +399,7 @@ class GenerateReportsController extends Controller
         if ($record_type == 'final') {
             switch ($report_type) {
                 case 'الكفالات المدخلة':
-                    $guarantees = DB::table('fguarantees')
+                    $data = DB::table('fguarantees')
                         ->where('type','تأمينات')
                         ->where('status', 'مدخلة')
                         ->where('date', '>=', $from)
@@ -436,12 +409,8 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','تاريخ العقد','رقم العقد','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','merit_date','date','bank_name','contract_date','contract_number','number','matter','equ_val_sy','currency','value','bidder_name'];
-
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
-                ////
                 case 'الكفالات الممددة':
 
                     $latest = DB::table('fguarantee_books')
@@ -449,7 +418,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('fguarantee_id');
 
-                    $fguarantees = DB::table('fguarantee_books')
+                    $data = DB::table('fguarantee_books')
                     ->where('type','تأمينات')
                     ->where('fguarantees.date', '>=', $from)
                     ->where('fguarantees.date', '<=', $to)
@@ -458,7 +427,7 @@ class GenerateReportsController extends Controller
                         ->orwhere('fguarantees.status', 'ممددة من البنك');
                     })
                     ->joinSub($latest, 'latest_book', function ($join) {
-                        $join->on('fguarantee_books.fguarantee_id', '=', 'latest_book.guarantee_id')
+                        $join->on('fguarantee_books.fguarantee_id', '=', 'latest_book.fguarantee_id')
                         ->on('fguarantee_books.created_at', '=', 'latest_book.latest_inserted_book_date');
                     })
                     ->join('fguarantees', 'fguarantees.id', '=', 'fguarantee_books.fguarantee_id')
@@ -472,8 +441,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($fguarantees);
-                    $this->toPDF($header, $fguarantees, $cols, $append_rows);
                 break;
 
                 case 'الكفالات المحررة':
@@ -482,7 +449,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('fguarantee_id');
 
-                    $guarantees = DB::table('fguarantee_books')
+                    $data = DB::table('fguarantee_books')
                     ->where('type','تأمينات')
                     ->where('fguarantees.date', '>=', $from)
                     ->where('fguarantees.date', '<=', $to)
@@ -502,8 +469,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'الكفالات المصادرة':
@@ -512,7 +477,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('fguarantee_id');
 
-                    $guarantees = DB::table('fguarantee_books')
+                    $data = DB::table('fguarantee_books')
                     ->where('type','تأمينات')
                     ->where('fguarantees.date', '>=', $from)
                     ->where('fguarantees.date', '<=', $to)
@@ -532,8 +497,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'الكفالات المسيلة':
@@ -542,7 +505,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('fguarantee_id');
 
-                    $guarantees = DB::table('fguarantee_books')
+                    $data = DB::table('fguarantee_books')
                     ->where('type','تأمينات')
                     ->where('fguarantees.date', '>=', $from)
                     ->where('fguarantees.date', '<=', $to)
@@ -562,13 +525,10 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
-                ////
 
                 case 'كفالات السلف المدخلة':
-                    $guarantees = DB::table('fguarantees')
+                    $data = DB::table('fguarantees')
                         ->where('type','سلف')
                         ->where('status', 'مدخلة')
                         ->where('date', '>=', $from)
@@ -579,18 +539,15 @@ class GenerateReportsController extends Controller
 
                     $cols = ['notes','merit_date','date','bank_name','contract_date','contract_number','number','matter','equ_val_sy','currency','value','bidder_name'];
 
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
-                ///
                 case 'كفالات السلف الممددة':
                     $latest = DB::table('fguarantee_books')
                     ->select('fguarantee_id')
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('fguarantee_id');
 
-                    $guarantees = DB::table('fguarantee_books')
+                    $data = DB::table('fguarantee_books')
                     ->where('type','سلف')
                     ->where('fguarantees.date', '>=', $from)
                     ->where('fguarantees.date', '<=', $to)
@@ -613,8 +570,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'كفالات السلف المصادرة':
@@ -623,7 +578,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('fguarantee_id');
 
-                    $guarantees = DB::table('fguarantee_books')
+                    $data = DB::table('fguarantee_books')
                     ->where('type','سلف')
                     ->where('fguarantees.date', '>=', $from)
                     ->where('fguarantees.date', '<=', $to)
@@ -643,8 +598,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'كفالات السلف المحررة':
@@ -653,7 +606,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('fguarantee_id');
 
-                    $guarantees = DB::table('fguarantee_books')
+                    $data = DB::table('fguarantee_books')
                     ->where('type','سلف')
                     ->where('fguarantees.date', '>=', $from)
                     ->where('fguarantees.date', '<=', $to)
@@ -673,8 +626,6 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
 
                 case 'كفالات السلف المسيلة':
@@ -683,7 +634,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('fguarantee_id');
 
-                    $guarantees = DB::table('fguarantee_books')
+                    $data = DB::table('fguarantee_books')
                     ->where('type','سلف')
                     ->where('fguarantees.date', '>=', $from)
                     ->where('fguarantees.date', '<=', $to)
@@ -703,13 +654,10 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($guarantees);
-                    $this->toPDF($header, $guarantees, $cols, $append_rows);
                 break;
-                ///
 
                 case 'الشيكات المدخلة':
-                    $checks = DB::table('fchecks')
+                    $data = DB::table('fchecks')
                     ->where('status', 'مدخل')
                     ->where('date', '>=', $from)
                     ->where('date', '<=', $to)
@@ -717,8 +665,6 @@ class GenerateReportsController extends Controller
 
                 $header = ['اسم المصرف','تاريخ العقد','رقم العقد','رقم الشيك','موضوع العرض | المناقصة','المعادل السوري','نوع العملة','قيمة التأمينات','اسم العارض'];
                 $cols = ['bank_name','contract_date','contract_number','number','matter','equ_val_sy','currency','value','bidder_name'];
-                $append_rows = $this->getStats($checks);
-                $this->toPDF($header, $checks, $cols, $append_rows);;
                 break;
 
                 case 'الشيكات المحررة':
@@ -728,7 +674,7 @@ class GenerateReportsController extends Controller
                         ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                         ->groupBy('fcheck_id');
 
-                        $checks = DB::table('fcheck_books')
+                        $data = DB::table('fcheck_books')
                         ->where('fchecks.status', 'محرر')
                         ->where('fchecks.date', '>=', $from)
                         ->where('fchecks.date', '<=', $to)
@@ -747,11 +693,9 @@ class GenerateReportsController extends Controller
                         $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','اسم المصرف الكفيل','رقم الشيك','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                         $cols = ['notes','bissued','bdate','btitle','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                        $append_rows = $this->getStats($checks);
-                        $this->toPDF($header, $checks, $cols, $append_rows);
                     break;
                 case 'الدفعات المدخلة':
-                    $fpayments = DB::table('fpayments')
+                    $data = DB::table('fpayments')
                     ->where('status', 'مدخلة')
                     ->where('date', '>=', $from)
                     ->where('date', '<=', $to)
@@ -760,8 +704,6 @@ class GenerateReportsController extends Controller
 
                     $cols = ['contract_date','contract_number','date','number','matter','equ_val_sy','currency','value','bidder_name'];
 
-                $append_rows = $this->getStats($fpayments);
-                $this->toPDF($header, $fpayments, $cols, $append_rows);
                 break;
 
                 case 'الدفعات المحررة':
@@ -770,7 +712,7 @@ class GenerateReportsController extends Controller
                     ->selectRaw('MAX(created_at) as latest_inserted_book_date')
                     ->groupBy('fpayment_id');
 
-                    $checks = DB::table('fpayment_books')
+                    $data = DB::table('fpayment_books')
                     ->where('fpayments.status', 'محررة')
                     ->where('fpayments.date', '>=', $from)
                     ->where('fpayments.date', '<=', $to)
@@ -789,11 +731,11 @@ class GenerateReportsController extends Controller
                     $header = ['الملاحظات','النوع','تاريخه','رقم الكتاب','اسم المصرف الكفيل','رقم الدفعة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
 
                     $cols = ['notes','bissued','bdate','btitle','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
-                    $append_rows = $this->getStats($checks);
-                    $this->toPDF($header, $checks, $cols, $append_rows);
-                break;
+                    break;
+                }
             }
-        }
+        $append_rows = $this->getStats($data);
+        $this->toPDF($header, $data, $cols, $append_rows);
     }
 
 
@@ -870,8 +812,6 @@ class GenerateReportsController extends Controller
                         $header = [];
                         $cols = [];
                         $append_rows = $this->getStats($data);
-                        $this->toPDF($header, $data, $cols, $append_rows);
-
         }
     }
 
@@ -963,95 +903,117 @@ class GenerateReportsController extends Controller
         return $stats;
     }
 
-    public function toPDF($header, $data, $cols, $append_rows) {
+    public function toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL) {
 
-        $funny = function($header, $rows, $cols, $append_rows=[]){
-            $fun_string = "<thead>";
-            if (count($header)!=0){
-                $fun_string .= "<tr>";
-            foreach($header as $head){
-                $fun_string .= "<th>" . $head . "</th>";
-            }
-            $fun_string .= "</tr>";
-        }
-            $fun_string .= "</thead>";
+        if ($isEXCEL) {
+            $rows = json_decode($data, true);
 
-            if (count($rows) == 0) {
-                return $fun_string."<tbody><tr><td colspan=".count($cols).">لايوجد بيانات لعرضها</td></tr></tbody>";
-            }
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
-
-            $fun_string .= "<tbody>";
-            if (count($cols) != 0) {
+            $sheet->fromArray($header,NULL);
+            
+            $r = 2;
             foreach($rows as $row) {
-                $fun_string .= "<tr>";
+                $c = 'A';
                 foreach($cols as $col) {
                     if( $col == 'equ_val_sy') {
-                        $fun_string .= "<td>". ($row[$col]==null?$row['value']:$row[$col]) ."</td>";
-                        continue;
+                        $sheet->setCellValue($c.$r, ($row[$col]==null?$row['value']:$row[$col]));
+                    } else {
+                        $sheet->setCellValue($c.$r, $row[$col]);
                     }
-                    $fun_string .= "<td>". $row[$col] ."</td>";
+                    ++$c;
                 }
-                $fun_string .= "</tr>";
-            }}
-
-            foreach($append_rows as $key => $value) {
-                $fun_string .= "<tr>";
-                $fun_string .= "<td colspan=". (count($header) - intdiv(count($header), 2)) .">" . $value . "</td>";
-                $fun_string .= "<td colspan=". (intdiv(count($header), 2)) .">" . $key . "</td>";
-                $fun_string .= "</tr>";
+                ++$r;
             }
-            $fun_string .= "</tbody>";
-            return $fun_string;
-        };
+            $writer = new Xlsx($spreadsheet);
+            $writer->save($title . '.xlsx');
+        }
 
-        $array_data = json_decode($data, true);
+        if ($isPDF) {
+            $funny = function($header, $rows, $cols, $append_rows=[]){
+                $fun_string = "<thead>";
+                if (count($header)!=0){
+                    $fun_string .= "<tr>";
+                    foreach($header as $head){
+                        $fun_string .= "<th>" . $head . "</th>";
+                    }
+                    $fun_string .= "</tr>";
+                }
+                $fun_string .= "</thead>";
 
-        $html = "<html><head>
-                    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
-                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                    <title>Document</title>
-                    <style>
-                        *{font-family: DejaVu Sans; dir:rtl; text-align: right; font-size: x-small;}
-                        #tab{
-                            font-family: DejaVu Sans;
-                            border-collapse: collapse;
-                            width: 100%;
+                if (count($rows) == 0) {
+                    return $fun_string."<tbody><tr><td colspan=".count($cols).">لايوجد بيانات لعرضها</td></tr></tbody>";
+                }
+
+                $fun_string .= "<tbody>";
+                if (count($cols) != 0) {
+                    foreach($rows as $row) {
+                        $fun_string .= "<tr>";
+                        foreach($cols as $col) {
+                            if( $col == 'equ_val_sy') {
+                                $fun_string .= "<td>". ($row[$col]==null?$row['value']:$row[$col]) ."</td>";
+                                continue;
+                            }
+                            $fun_string .= "<td>". $row[$col] ."</td>";
                         }
-                        #tab td,#tab th{
-                            border: 1px solid  #151B54;
-                            text-align: center;
-                            color: #0C090A;
-                        }
-                        #tab th{
-                            padding-top: 12px;
-                            padding-bottom: 12px;
-                            text-align: center;
+                        $fun_string .= "</tr>";
+                    }
+                }
 
-                        }
-                        #report-title {
-                            text-align: center;
-                            font-size: x-large;
-                            padding-bottom: 6px;
-                            color: #800517;
-                        }
+                foreach($append_rows as $key => $value) {
+                    $fun_string .= "<tr>";
+                    $fun_string .= "<td colspan=". (count($header) - intdiv(count($header), 2)) .">" . $value . "</td>";
+                    $fun_string .= "<td colspan=". (intdiv(count($header), 2)) .">" . $key . "</td>";
+                    $fun_string .= "</tr>";
+                }
+                $fun_string .= "</tbody>";
+                return $fun_string;
+            };
 
-                    </style>
-                </head><body>" . $this->title .
-                "<table id='tab' cellspacing='2' cellpadding='5'>" .
-                        $funny($header, $array_data, $cols, $append_rows) .
-                "</table></body></html>";
+            $array_data = json_decode($data, true);
 
-        $dompdf = new Dompdf();
-        $options = $dompdf->getOptions();
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'landscape');
-        $dompdf->render();
-        $dompdf->stream();
+            $html = "<html><head>
+                        <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+                        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                        <title>Document</title>
+                        <style>
+                            *{font-family: DejaVu Sans; dir:rtl; text-align: right; font-size: x-small;}
+                            #tab{
+                                font-family: DejaVu Sans;
+                                border-collapse: collapse;
+                                width: 100%;
+                            }
+                            #tab td,#tab th{
+                                border: 1px solid  #151B54;
+                                text-align: center;
+                                color: #0C090A;
+                            }
+                            #tab th{
+                                padding-top: 12px;
+                                padding-bottom: 12px;
+                                text-align: center;
+
+                            }
+                            #report-title {
+                                text-align: center;
+                                font-size: x-large;
+                                padding-bottom: 6px;
+                                color: #800517;
+                            }
+
+                        </style>
+                    </head><body>" . $this->title .
+                    "<table id='tab' cellspacing='2' cellpadding='5'>" .
+                            $funny($header, $array_data, $cols, $append_rows) .
+                    "</table></body></html>";
+
+            $dompdf = new Dompdf();
+            $options = $dompdf->getOptions();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->render();
+            $dompdf->stream();
+        }
     }
-
-
 }
-
-
-
