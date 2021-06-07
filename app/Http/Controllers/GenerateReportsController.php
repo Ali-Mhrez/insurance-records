@@ -23,11 +23,26 @@ class GenerateReportsController extends Controller
     }
 
     public function detailed_reports(Request $request)
-    {dd($request->report);
+    {
         $record_type = $request->record_type;
         $report_type = $request->report_type;
         $from = $request->from;
         $to = $request->to;
+        $pdf_excel = $request->report;
+
+        if (count($pdf_excel) == 0) {
+            $isPDF = true;
+            $isEXCEL = false;
+        } else if (count($pdf_excel) == 2) {
+            $isPDF = true;
+            $isEXCEL = true;
+        } else if ($pdf_excel[0] == 'pdf'){
+            $isPDF = true;
+            $isEXCEL = false;
+        } else {
+            $isPDF = false;
+            $isEXCEL = true;
+        }
 
         $this->title = "<h6 id='report-title'>" . "التقرير الخاص ب"
         . $report_type .
@@ -735,13 +750,27 @@ class GenerateReportsController extends Controller
                 }
             }
         $append_rows = $this->getStats($data);
-        $this->toPDF($header, $data, $cols, $append_rows);
+        $this->toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, 'D:/اسم بما');
     }
-
 
     public function summary_reports (Request $request)
     {
         $record_type = $request->record_type;
+        $pdf_excel = $request->report;
+
+        if ($pdf_excel == null) {
+            $isPDF = true;
+            $isEXCEL = false;
+        } else if (count($pdf_excel) == 2) {
+            $isPDF = true;
+            $isEXCEL = true;
+        } else if ($pdf_excel[0] == 'pdf'){
+            $isPDF = true;
+            $isEXCEL = false;
+        } else {
+            $isPDF = false;
+            $isEXCEL = true;
+        }
 
         $this->title = "<h6 id='report-title'>" . "التقرير الكلي للسجلات "
         .($record_type == 'initial' ? "البدائية": "النهائية")
@@ -772,15 +801,11 @@ class GenerateReportsController extends Controller
                         ->select('value','currency','equ_val_sy')
                         ->get();
 
-
-                        $data=$guarantees->concat($checks)->concat($payments);
-                      //  dd($data);
-                        $header = [];
-                        $cols = [];
-                        $append_rows = $this->getStats($data);
-                        $this->toPDF($header, $data, $cols, $append_rows);
-
+            $data=$guarantees->concat($checks)->concat($payments);
+            $append_rows = $this->getStats($data);
+            $this->toPDF([], $data, [], $append_rows, $isPDF, $isEXCEL, 'D:\sdfsdf');
         }
+
         if ($record_type == 'final') {
 
             $fguarantees = DB::table('fguarantees')
@@ -802,23 +827,35 @@ class GenerateReportsController extends Controller
                         ->select('fchecks.value','fchecks.currency','fchecks.equ_val_sy')
                         ->get();
 
-
             $fpayments = DB::table('fpayments')
                         ->where('status','مدخلة')
                         ->select('value','currency','equ_val_sy')
                         ->get();
-                        $data=$fguarantees->concat($fchecks)->concat($fpayments);
-                      //  dd($data);
-                        $header = [];
-                        $cols = [];
-                        $append_rows = $this->getStats($data);
+
+            $data=$fguarantees->concat($fchecks)->concat($fpayments);
+            $append_rows = $this->getStats($data);
+            $this->toPDF([], $data, [], $append_rows, $isPDF, $isEXCEL, 'D:\sdfsdf');
         }
     }
-
 
     public function comprehensive_reports(Request $request)
     {
         $report_type = $request->report_type;
+        $pdf_excel = $request->report;
+
+        if (count($pdf_excel) == 0) {
+            $isPDF = true;
+            $isEXCEL = false;
+        } else if (count($pdf_excel) == 2) {
+            $isPDF = true;
+            $isEXCEL = true;
+        } else if ($pdf_excel[0] == 'pdf'){
+            $isPDF = true;
+            $isEXCEL = false;
+        } else {
+            $isPDF = false;
+            $isEXCEL = true;
+        }
 
         $this->title = "<h6 id='report-title'>" . "التقرير الشامل لـ " . $report_type . "</h6>";
         $this->title .= "<h6> التاريخ: " . Carbon::now()->toDateString() . "</h6>";
@@ -841,7 +878,6 @@ class GenerateReportsController extends Controller
 
             $cols = ['status', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
             $append_rows = $this->getStats($data);
-            $this->toPDF($header, $data, $cols, $append_rows);
         }
 
         if ($report_type == 'الشيكات') {
@@ -860,7 +896,6 @@ class GenerateReportsController extends Controller
 
             $cols = ['status', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
             $append_rows = $this->getStats($data);
-            $this->toPDF($header, $data, $cols, $append_rows);
         }
 
         if ($report_type == 'الدفعات النقدية | الحوالات') {
@@ -879,13 +914,9 @@ class GenerateReportsController extends Controller
 
             $cols = ['status','type', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
             $append_rows = $this->getStats($data);
-            $this->toPDF($header, $data, $cols, $append_rows);
         }
+        $this->toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, 'D:/اسم ما');
     }
-
-
-
-
 
     public function getStats($data) {
         $stats = [];
@@ -903,7 +934,7 @@ class GenerateReportsController extends Controller
         return $stats;
     }
 
-    public function toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL) {
+    public function toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, $filename='') {
 
         if ($isEXCEL) {
             $rows = json_decode($data, true);
@@ -927,7 +958,7 @@ class GenerateReportsController extends Controller
                 ++$r;
             }
             $writer = new Xlsx($spreadsheet);
-            $writer->save($title . '.xlsx');
+            $writer->save($filename . '.xlsx');
         }
 
         if ($isPDF) {

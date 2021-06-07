@@ -137,14 +137,14 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf"
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf2"
                                             value="pdf">
-                                        <label for="pdf" class="custom-control-label">PDF</label>
+                                        <label for="pdf2" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel"
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel2"
                                             value="excel">
-                                        <label for="excel" class="custom-control-label">Excel</label>
+                                        <label for="excel2" class="custom-control-label">Excel</label>
                                     </div>
 
                                 </div>
@@ -183,14 +183,14 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf"
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf4"
                                             value="pdf">
-                                        <label for="pdf" class="custom-control-label">PDF</label>
+                                        <label for="pdf4" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel"
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel4"
                                             value="excel">
-                                        <label for="excel" class="custom-control-label">Excel</label>
+                                        <label for="excel4" class="custom-control-label">Excel</label>
                                     </div>
 
                                 </div>
