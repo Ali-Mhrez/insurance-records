@@ -34,7 +34,7 @@ class FcheckRenew extends Books
             'status' => 'required',
             'notes' => 'bail|max:40',
             'number' => 'bail|required|unique:fchecks',
-            'contract_number' => 'bail|required|integer|min:0|unique:fchecks',
+            'contract_number' => 'bail|required|integer|min:0',
             'contract_date' => 'bail|required|date',
         ];
     }
@@ -70,7 +70,7 @@ class FcheckRenew extends Books
             'status.required' => 'يرجى اختيار الحالة',
 
             'notes.max' => 'تم تجاوز الحد المسموح به لعدد المحارف (40 محرف كحد أقصى)',
-            
+
             'number.required' => 'يرجى إدخال الرقم ',
             'number.unique' => 'الرقم  موجود بالفعل',
 

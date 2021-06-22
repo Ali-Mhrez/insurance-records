@@ -33,8 +33,11 @@
                     {{ $status_array['محرر  '] = 'محرر' }}
                     {{ $status_array['مصادر'] = 'مصادر' }}
                     @foreach ($status_array as $key => $value)
-                        <option value="{{ $key }}" @if ($key == old('status')) selected="selected" @endif>{{ $value }}</option>
-                    @endforeach
+                    <option value="{{ $key }}" @if ($key == old('status'))
+                        selected="selected"
+                @endif
+                >{{ $value }}</option>
+                @endforeach
                 </select>
                 @error('status')
                     <li class=" alert alert-danger">{{ $message }}</li>
@@ -64,7 +67,7 @@
                 @enderror
             </div>
             <div class="form-group col-md-4" id="first">
-                
+
             </div>
         </div>
         <div class="row">
