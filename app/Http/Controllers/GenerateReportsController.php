@@ -1274,7 +1274,23 @@ class GenerateReportsController extends Controller
     public function owed_reports(Request $request) {
         $record_type = $request->record_type;
         $report_type = $request->report_type;
+        $pdf_excel = $request->report;
+
+        if (count($pdf_excel) == 0) {
+            $isPDF = true;
+            $isEXCEL = false;
+        } else if (count($pdf_excel) == 2) {
+            $isPDF = true;
+            $isEXCEL = true;
+        } else if ($pdf_excel[0] == 'pdf') {
+            $isPDF = true;
+            $isEXCEL = false;
+        } else {
+            $isPDF = false;
+            $isEXCEL = true;
+        }
         $this->title = "<h6 id='report-title'>" . "التقرير الخاص ب" .
+        $report_type .
         " المستحقة في السجلات " .
         ($record_type == 'initial' ? "البدائية": "النهائية");
 
