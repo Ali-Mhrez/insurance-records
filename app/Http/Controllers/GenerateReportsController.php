@@ -1148,12 +1148,18 @@ class GenerateReportsController extends Controller
         $this->toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, 'D:/اسم ما');
     }
 
+<<<<<<< HEAD
 
 
     public function special_reports(Request $request)
     {
         $report_type = $request->report_type;
         $number = $request->number;
+=======
+    public function owed_reports(Request $request) {
+        $record_type = $request->record_type;
+        $report_type = $request->report_type;
+>>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
         $pdf_excel = $request->report;
 
         if (count($pdf_excel) == 0) {
@@ -1162,7 +1168,11 @@ class GenerateReportsController extends Controller
         } else if (count($pdf_excel) == 2) {
             $isPDF = true;
             $isEXCEL = true;
+<<<<<<< HEAD
         } else if ($pdf_excel[0] == 'pdf') {
+=======
+        } else if ($pdf_excel[0] == 'pdf'){
+>>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
             $isPDF = true;
             $isEXCEL = false;
         } else {
@@ -1170,7 +1180,6 @@ class GenerateReportsController extends Controller
             $isEXCEL = true;
         }
 
-        $this->title = "<h6 id='report-title'>" . "التقرير التفصيلي ل" . $report_type . " رقم " .  $number . "</h6>";
         $this->title .= "<h6> التاريخ: " . Carbon::now()->toDateString() . "</h6>";
 
         if ($report_type == 'كفالة ممددة') {
@@ -1274,9 +1283,78 @@ class GenerateReportsController extends Controller
 
     public function getStats($data)
     {
+        $this->title = "<h6 id='report-title'>" . "التقرير الخاص ب"
+        " المستحقة في السجلات " .
+        ($record_type == 'initial' ? "البدائية": "النهائية");
+
+        if ($record_type == 'initial') {
+            if ($report_type == 'الكفالات') {
+
+                $guarantees = DB::table('guarantees')
+                        ->where(function ($query){
+                            $query ->where('type', 'تأمينات')
+                            ->orwhere('type', 'سلف');
+                        })
+                        ->where(function ($query){
+                            $query ->where('status', 'مدخلة')
+                            ->orwhere('status', 'ممددة من القسم')
+                            ->orwhere('status', 'ممددة من البنك');
+                        })
+                        ->get();
+
+                $data = collect($guarantees)->map(function($collection, $key) {
+
+                    $book = DB::table('guarantee_books')
+                    ->where('guarantee_id', '=', $collection->id)
+                    ->latest('date')
+                    ->get();
+
+                    if (count($book) > 0) {
+                        $merit = strtotime($book[0]->new_merit);
+                    } else {
+                        $merit = strtotime($collection->merit_date);
+                    }
+                    $today = strtotime(date("Y-m-d"));
+
+                    if ($merit >= $today) {
+                        $diff = $merit - $today;
+                        $years = floor($diff / (365*60*60*24));
+                        $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                        $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+
+                        if ($years == 0 && $months == 0 && $days <= 20) {
+                            if (count($book) > 0) {
+                                $collection->btitle = $book[0]->title;
+                                $collection->bdate = $book[0]->date;
+                                $collection->bissued = $book[0]->issued;
+                                $collection->bmerit = $book[0]->new_merit;
+                            } else {
+                                $collection->btitle = 'لايوجد';
+                                $collection->bdate = 'لايوجد';
+                                $collection->bissued = 'لايوجد';
+                                $collection->bmerit = 'لايوجد';
+                            }
+                        }
+                    }
+                });
+                $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
+                $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
+                $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
+            } else {
+
+            }
+        } else {
+            if ($report_type == 'الكفالات') {
+
+            } else {
+
+            }
+        }
+    }
+
+    public function getStats($data) {
         $stats = [];
         $total = 0;
-        foreach ($data as $d) {
             $stats[$d->currency] = (array_key_exists($d->currency, $stats)
                 ? $stats[$d->currency] + $d->value
                 : $d->value);
@@ -1289,19 +1367,30 @@ class GenerateReportsController extends Controller
         return $stats;
     }
 
+<<<<<<< HEAD
     public function toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, $filename = '')
     {
 
+=======
+    public function toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, $filename='') {
+
+>>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
         if ($isEXCEL) {
             $rows = json_decode($data, true);
-
+            $cols = array_reverse($cols);
+            $header = array_reverse($header);
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
             $sheet->fromArray($header, NULL);
 
             $r = 2;
+<<<<<<< HEAD
             foreach ($rows as $row) {
+=======
+            foreach($rows as $row) {
+                if ($row == null) continue;
+>>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
                 $c = 'A';
                 foreach ($cols as $col) {
                     if ($col == 'equ_val_sy') {
@@ -1318,7 +1407,12 @@ class GenerateReportsController extends Controller
         }
 
         if ($isPDF) {
+<<<<<<< HEAD
             $funny = function ($header, $rows, $cols, $append_rows = []) {
+=======
+            $funny = function($header, $rows, $cols, $append_rows=[]){
+
+>>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
                 $fun_string = "<thead>";
                 if (count($header) != 0) {
                     $fun_string .= "<tr>";
@@ -1335,7 +1429,12 @@ class GenerateReportsController extends Controller
 
                 $fun_string .= "<tbody>";
                 if (count($cols) != 0) {
+<<<<<<< HEAD
                     foreach ($rows as $row) {
+=======
+                    foreach($rows as $row) {
+                        if ($row == null) continue;
+>>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
                         $fun_string .= "<tr>";
                         foreach ($cols as $col) {
                             if ($col == 'equ_val_sy') {

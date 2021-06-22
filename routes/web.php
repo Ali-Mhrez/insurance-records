@@ -80,6 +80,8 @@ Route::get('/generate_summary_reports', [GenerateReportsController::class,'summa
 
 Route::get('/generate_comprehensive_reports', [GenerateReportsController::class,'comprehensive_reports'])->name('reports.comprehensive_reports');
 
+Route::get('/generate_owed_reports', [GenerateReportsController::class,'owed_reports'])->name('reports.owed_reports');
+
 Route::get('/generate_special_reports', [GenerateReportsController::class,'special_reports'])->name('reports.special_reports');
 });
 

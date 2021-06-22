@@ -33,8 +33,8 @@
                             <form action="{{ route('reports.detailed_reports') }}">
                                 <div class="row">
                                     <div class="form-group col-3">
-                                        <label for="type">نوع السجلات</label>
-                                        <select class="form-control @error('type') is-invalid @enderror" id="record_type"
+                                        <label for="record_type1">نوع السجلات</label>
+                                        <select class="form-control @error('type') is-invalid @enderror" id="record_type1"
                                             name="record_type">
                                             {{ $insurance_array[''] = '- اختر النوع -' }}
                                             {{ $insurance_array['initial'] = 'بدائية' }}
@@ -44,13 +44,13 @@
                                                     {{ $value }}</option>
                                             @endforeach
                                         </select>
-                                        @error('type')
+                                        @error('record_type1')
                                             <li class=" alert alert-danger">{{ $message }}</li>
                                         @enderror
                                     </div>
                                     <div class="form-group col-3">
-                                        <label for="type">نوع التقرير</label>
-                                        <select class="form-control @error('type') is-invalid @enderror" id="report_type"
+                                        <label for="report_type1">نوع التقرير</label>
+                                        <select class="form-control @error('type') is-invalid @enderror" id="report_type1"
                                             name="report_type">
                                             {{ $report_array[''] = '- اختر النوع -' }}
                                             {{ $report_array['الكفالات المدخلة'] = 'الكفالات المدخلة' }}
@@ -75,7 +75,7 @@
                                                     {{ $value }}</option>
                                             @endforeach
                                         </select>
-                                        @error('type')
+                                        @error('report_type1')
                                             <li class=" alert alert-danger">{{ $message }}</li>
                                         @enderror
                                     </div>
@@ -96,14 +96,14 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf"
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf1"
                                             value="pdf">
-                                        <label for="pdf" class="custom-control-label">PDF</label>
+                                        <label for="pdf1" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel"
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel1"
                                             value="excel">
-                                        <label for="excel" class="custom-control-label">Excel</label>
+                                        <label for="excel1" class="custom-control-label">Excel</label>
                                     </div>
 
                                 </div>
@@ -119,8 +119,8 @@
                             <form action="{{ route('reports.summary_reports') }}">
                                 <div class="row justify-content-center">
                                     <div class="form-group col-md-6">
-                                        <label for="type">نوع السجلات</label>
-                                        <select class="form-control @error('type') is-invalid @enderror" id="record_type"
+                                        <label for="record_type2">نوع السجلات</label>
+                                        <select class="form-control @error('type') is-invalid @enderror" id="record_type2"
                                             name="record_type">
                                             {{ $insurance_array2[''] = '- اختر النوع -' }}
                                             {{ $insurance_array2['initial'] = 'بدائية' }}
@@ -130,7 +130,7 @@
                                                     {{ $value }}</option>
                                             @endforeach
                                         </select>
-                                        @error('type')
+                                        @error('record_type2')
                                             <li class=" alert alert-danger">{{ $message }}</li>
                                         @enderror
                                     </div>
@@ -156,14 +156,69 @@
                             </form>
                         </div>
                         <div class="tab-pane" id="third">
-                            third
+                            <form action="{{ route('reports.owed_reports') }}">
+                                <div class="row justify-content-center">
+                                    <div class="form-group col-3">
+                                        <label for="record_type3">نوع السجلات</label>
+                                        <select class="form-control @error('type') is-invalid @enderror" id="record_type3"
+                                            name="record_type">
+                                            {{ $insurance_array3[''] = '- اختر النوع -' }}
+                                            {{ $insurance_array3['initial'] = 'بدائية' }}
+                                            {{ $insurance_array3['final'] = 'نهائية' }}
+                                            @foreach ($insurance_array3 as $key => $value)
+                                                <option value="{{ $key }}" @if ($key == old('type')) selected="selected" @endif>
+                                                    {{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('record_type3')
+                                            <li class=" alert alert-danger">{{ $message }}</li>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label for="report_type3">نوع التقرير</label>
+                                        <select class="form-control @error('type') is-invalid @enderror" id="report_type3"
+                                            name="report_type">
+                                            {{ $report_array3[''] = '- اختر النوع -' }}
+                                            {{ $report_array3['الكفالات'] = 'الكفالات' }}
+                                            {{ $report_array3['الشيكات'] = 'الشيكات' }}
+                                            @foreach ($report_array3 as $key => $value)
+                                                <option value="{{ $key }}" @if ($key == old('type')) selected="selected" @endif>
+                                                    {{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('report_type3')
+                                            <li class=" alert alert-danger">{{ $message }}</li>
+                                        @enderror
+                                    </div>
+
+                                </div>
+
+                                <div class="row justify-content-center">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf3"
+                                            value="pdf">
+                                        <label for="pdf3" class="custom-control-label">PDF</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel3"
+                                            value="excel">
+                                        <label for="excel3" class="custom-control-label">Excel</label>
+                                    </div>
+                                </div>
+
+                                <div class="row justify-content-center mt-3">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary btn-lg">تأكيد</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div class="tab-pane" id="fourth">
                             <form action="{{ route('reports.comprehensive_reports') }}">
                                 <div class="row justify-content-center">
                                     <div class="form-group col-6">
-                                        <label for="type">نوع التقرير</label>
-                                        <select class="form-control @error('type') is-invalid @enderror" id="report_type"
+                                        <label for="report_type4">نوع التقرير</label>
+                                        <select class="form-control @error('type') is-invalid @enderror" id="report_type4"
                                             name="report_type">
                                             {{ $report_array4[''] = '- اختر النوع -' }}
                                             {{ $report_array4['الكفالات'] = 'الكفالات' }}
@@ -175,7 +230,7 @@
                                                     {{ $value }}</option>
                                             @endforeach
                                         </select>
-                                        @error('type')
+                                        @error('report_type4')
                                             <li class=" alert alert-danger">{{ $message }}</li>
                                         @enderror
                                     </div>
