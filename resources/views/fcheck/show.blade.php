@@ -75,6 +75,11 @@
                 <button type="Submit" class="btn btn-outline-primary">مصادرة</button>
             </form>
         </div>
+        <div class="col-xs-1">
+            <form action="{{ route('fcheck.renewForm', ['id' => $check->id]) }}" class="form-inline">
+                <button type="Submit" class="btn btn-outline-primary">تجديد</button>
+            </form>
+        </div>
     @else
         <div class="col-xs-1">
             <form class="form-inline">
@@ -84,6 +89,11 @@
         <div class="col-xs-1">
             <form class="form-inline">
                 <button type="Submit" class="btn btn-outline-primary" disabled>مصادرة</button>
+            </form>
+        </div>
+        <div class="col-xs-1">
+            <form class="form-inline">
+                <button type="Submit" class="btn btn-outline-primary" disabled>تجديد</button>
             </form>
         </div>
     @endif

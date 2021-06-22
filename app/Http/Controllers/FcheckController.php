@@ -17,7 +17,7 @@ use Carbon\Carbon;
 class FcheckController extends Controller
 {
     public function index() {
-        $checks =  Fcheck::where('id', '>=', 1)->orderby('updated_at', 'desc')->paginate(5);
+        $checks =  Fcheck::where('id', '>=', 1)->orderby('updated_at', 'desc')->get();
         return view('fcheck.list', ['checks' => $checks]);
     }
 

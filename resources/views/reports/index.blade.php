@@ -20,7 +20,7 @@
                 <li class="nav-item"><a class="nav-link" href="#second" data-toggle="tab">التقرير الكلي</a></li>
                 <li class="nav-item"><a class="nav-link" href="#third" data-toggle="tab">التقارير المستحقة</a></li>
                 <li class="nav-item"><a class="nav-link" href="#fourth" data-toggle="tab">التقارير الشاملة</a></li>
-                <li class="nav-item"><a class="nav-link" href="#fifth" data-toggle="tab">تقارير (تمديد - تجديد)</a></li>
+                <li class="nav-item"><a class="nav-link" href="#fifth" data-toggle="tab">تقارير (تمديد كفالة- تجديد شيك)</a></li>
             </ul>
         </div><!-- /.card-header -->
         <!-- /.card-header -->
@@ -204,7 +204,54 @@
 
 
                         <div class="tab-pane" id="fifth">
-                            fifth
+                            <form action="{{ route('reports.special_reports') }}">
+                                <div class="row justify-content-center">
+                                    <div class="form-group col-3">
+                                        <label for="type">نوع التقرير</label>
+                                        <select class="form-control @error('type') is-invalid @enderror" id="report_type"
+                                            name="report_type">
+                                            {{ $report_array5[''] = '- اختر النوع -' }}
+                                            {{ $report_array5['كفالة ممددة'] = 'كفالة ممددة' }}
+                                            {{ $report_array5['شيك مجدد'] = 'شيك مجدد' }}
+
+                                            @foreach ($report_array5 as $key => $value)
+                                                <option value="{{ $key }}" @if ($key == old('type')) selected="selected" @endif>
+                                                    {{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('type')
+                                            <li class=" alert alert-danger">{{ $message }}</li>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-3 ">
+                                        <label for="number">الرقم</label>
+                                        <input type="text" class="form-control @error('number') is-invalid @enderror" id="number" name="number"
+                                            value="{{ old('number') }}">
+                                        @error('number')
+                                            <li class=" alert alert-danger">{{ $message }}</li>
+                                        @enderror
+                                    </div>
+
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf5"
+                                            value="pdf">
+                                        <label for="pdf5" class="custom-control-label">PDF</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel5"
+                                            value="excel">
+                                        <label for="excel5" class="custom-control-label">Excel</label>
+                                    </div>
+
+                                </div>
+                                <div class="row justify-content-center mt-3">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary btn-lg">تأكيد</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
 
                     </div>

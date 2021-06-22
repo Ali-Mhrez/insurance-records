@@ -440,7 +440,7 @@
     <!-- jQuery -->
 	 <script src="{{asset('public/plugins/jquery/jquery.min.js')}}"></script>
     <!-- jQuery UI 1.11.4 -->
-    
+
 	<script src="{{asset('public/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
@@ -478,43 +478,43 @@
 	<script src="{{asset('public/dist/js/demo.js')}}"></script>
     <!-- DataTables  & Plugins -->
 	<script src="{{asset('public/plugins/datatables/jquery.dataTables.min.js')}}"></script>
-	
+
     <script src=""></script>
     <script src="{{asset('public/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
-	
+
 	<script src=""></script>
     <script src="{{asset('public/plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
-	
+
 	<script src=""></script>
     <script src="{{asset('public/plugins/datatables-responsive/js/responsive.bootstrap4.min.js')}}"></script>
-	
+
 	<script src=""></script>
     <script src="{{asset('public/plugins/datatables-buttons/js/dataTables.buttons.min.js')}}"></script>
-	
+
 	<script src=""></script>
     <script src="{{asset('public/plugins/datatables-buttons/js/buttons.bootstrap4.min.js')}}"></script>
-	
+
 	<script src="/"></script>
     <script src="{{asset('public/plugins/jszip/jszip.min.js')}}"></script>
-	
+
 	<script src=""></script>
     <script src="{{asset('public/plugins/pdfmake/pdfmake.min.js')}}"></script>
-	
+
 	<script src=""></script>
     <script src="{{asset('public/plugins/pdfmake/vfs_fonts.js')}}"></script>
-	
+
 	<script src=""></script>
     <script src="{{asset('public/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
-	
+
 	<script src="/"></script>
     <script src="{{asset('public/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
-	
+
 	<script src=""></script>
     <script src="{{asset('public/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
-	
+
 	<script src=""></script>
     <script src="{{asset('public/plugins/datatables/arabic.json')}}"></script>
-	
+
 
     <script type="text/javascript" src="{{asset('public/js/toastr.min.js') }}">
     </script>
@@ -525,22 +525,20 @@
     <script>
         $(function() {
             $("#example1").DataTable({
-
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+                // "responsive": true,
+                // "lengthChange": false,
+                // "autoWidth": false,
+                "buttons": ["copy", "print", "colvis"],
 
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
             $('#example2').DataTable({
                 "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-
+                // "lengthChange": true,
+                // "searching": false,
+                // "ordering": true,
+                // "info": true,
+                // "autoWidth": false,
+                // "responsive": true,
             });
         });
 
@@ -550,28 +548,120 @@
         $(function() {
             $("#example1").DataTable({
 
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["copy", "colvis"],
 
+                "buttons": ["copy", "colvis"],
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
             $('#example2').DataTable({
                 "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-
             });
         });
 
     </script>
+
     @endif
 
     <!-- Page specific script -->
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+               showEquValOnLoad();
+               showBankNameOnLoad();
+           })
+
+
+
+           function showEquVal(value) {
+               var currency = document.getElementById("currency");
+               if (value == "ليرة سورية") {
+                   $("#first").html('');
+
+               } else {
+                   var html = '  <label for="equ_val_sy ">المكافئ بالليرة   السورية</label>' +
+                       '                    <input type="number" class="form-control @error('
+                   equ_val_sy ') is-invalid @enderror" id="equ_val_sy" name="equ_val_sy" value="' + currency_value + '"' +
+                       '> @error('equ_val_sy')'
+                           +'<li class=" alert alert-danger">{{ $message }}</li>'+
+                      ' @enderror';
+                   $("#first").html(html);
+               }
+           }
+           function showBankName(value) {
+               var type = document.getElementById("type");
+               if (value == "دفعة نقدية") {
+                   $("#bankCreate").html('');
+                   $("#bankUpdate").html('');
+
+               } else {
+                   var htmlC= '<label for="bank_name">اسم المصرف الكفيل</label>'+
+                        ' <select type="text" name="bank_name" id="bank_name" class="form-control @error('bank_name') is-invalid @enderror">'+
+                         '    <option value="" selected="selected">- اختر البنك -</option>'+
+                        '     @foreach ($banks ?? '' as $bank)'+
+                         '        <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name'))'+
+                        '             selected="selected"'+
+                        '     @endif'+
+                        '     >{{ $bank->name }}</option>'+
+                          '   @endforeach </select>'+
+                      '   @error('bank_name') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
+
+                      var htmlU= '<label for="bank_name">اسم المصرف الكفيل</label>'+
+                        ' <select type="text" name="bank_name" id="bank_name" class="form-control @error('bank_name') is-invalid @enderror">'+
+                        '     @foreach ($banks ?? '' as $bank)'+
+                         '        <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name'))'+
+                        '             selected="selected"'+
+                        '     @endif'+
+                        '     >{{ $bank->name }}</option>'+
+                          '   @endforeach </select>'+
+                      '   @error('bank_name') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
+                   $("#bankCreate").html(htmlC);
+                   $("#bankUpdate").html(htmlU);
+               }
+           }
+           function showEquValOnLoad() {
+               var currency = document.getElementById("currency");
+               if (currency.value == "ليرة سورية") {
+                   $("#first").html('');
+
+               } else {
+                   var html = '  <label for="equ_val_sy ">المكافئ بالليرة   السورية</label>'+
+                        '                    <input type="number" class="form-control @error('
+                    equ_val_sy ') is-invalid @enderror" id="equ_val_sy" name="equ_val_sy" value="' + currency_value + '"' +
+                        '>      @error('equ_val_sy')<li class=" alert alert-danger">{{ $message }}</li>@enderror ';
+                   $("#first").html(html);
+               }
+           }
+           function showBankNameOnLoad() {
+               var type = document.getElementById("type");
+               if (type.value == "دفعة نقدية") {
+                   $("#bankCreate").html('');
+                   $("#bankUpdate").html('');
+
+               } else {
+                   var htmlC= '<label for="bank_name">اسم المصرف الكفيل</label>'+
+                        ' <select type="text" name="bank_name" id="bank_name" class="form-control @error('bank_name') is-invalid @enderror">'+
+                         '  <option value="" selected="selected">- اختر البنك -</option>'+
+                        '     @foreach ($banks ?? '' as $bank)'+
+                         '        <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name'))'+
+                        '             selected="selected"'+
+                        '     @endif'+
+                        '     >{{ $bank->name }}</option>'+
+                          '   @endforeach </select>'+
+                      '   @error('bank_name') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
+                      var htmlU= '<label for="bank_name">اسم المصرف الكفيل</label>'+
+                        ' <select type="text" name="bank_name" id="bank_name" class="form-control @error('bank_name') is-invalid @enderror">'+
+                        '     @foreach ($banks ?? '' as $bank)'+
+                         '        <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name'))'+
+                        '             selected="selected"'+
+                        '     @endif'+
+                        '     >{{ $bank->name }}</option>'+
+                          '   @endforeach </select>'+
+                      '   @error('bank_name') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
+                   $("#bankCreate").html(htmlC);
+                   $("#bankUpdate").html(htmlU);
+               }
+           }
+
+
+       </script>
 
 </body>
 

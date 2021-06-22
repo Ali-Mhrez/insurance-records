@@ -20,4 +20,13 @@ class Fcheck extends Model
     public function renew(){
         return $this->hasOne('App\Models\Fcheck', 'renewd_check_id');
     }
+    // public function parent()
+    // {
+    //     return $this->belongsTo('App\Models\Fcheck','renewd_check_id')->where('renewd_check_id',NULL);
+    // }
+
+    // public function children()
+    // {
+    //     return $this->hasOne('App\Models\Fcheck','renewd_check_id');
+    // }
 }

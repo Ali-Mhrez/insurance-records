@@ -137,9 +137,9 @@
         <button type="submit" class="btn btn-primary">تعديل</button>
     </form>
 @endsection
+
 @section('scripts')
     <script>
         var currency_value = '{{ old('equ_val_sy', $check->equ_val_sy) }}';
-
     </script>
 @endsection
