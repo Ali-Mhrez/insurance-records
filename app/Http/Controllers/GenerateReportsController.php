@@ -1148,18 +1148,12 @@ class GenerateReportsController extends Controller
         $this->toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, 'D:/اسم ما');
     }
 
-<<<<<<< HEAD
 
 
     public function special_reports(Request $request)
     {
         $report_type = $request->report_type;
         $number = $request->number;
-=======
-    public function owed_reports(Request $request) {
-        $record_type = $request->record_type;
-        $report_type = $request->report_type;
->>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
         $pdf_excel = $request->report;
 
         if (count($pdf_excel) == 0) {
@@ -1168,11 +1162,7 @@ class GenerateReportsController extends Controller
         } else if (count($pdf_excel) == 2) {
             $isPDF = true;
             $isEXCEL = true;
-<<<<<<< HEAD
         } else if ($pdf_excel[0] == 'pdf') {
-=======
-        } else if ($pdf_excel[0] == 'pdf'){
->>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
             $isPDF = true;
             $isEXCEL = false;
         } else {
@@ -1281,9 +1271,10 @@ class GenerateReportsController extends Controller
     }
 
 
-    public function getStats($data)
-    {
-        $this->title = "<h6 id='report-title'>" . "التقرير الخاص ب"
+    public function owed_reports(Request $request) {
+        $record_type = $request->record_type;
+        $report_type = $request->report_type;
+        $this->title = "<h6 id='report-title'>" . "التقرير الخاص ب" .
         " المستحقة في السجلات " .
         ($record_type == 'initial' ? "البدائية": "النهائية");
 
@@ -1355,6 +1346,7 @@ class GenerateReportsController extends Controller
     public function getStats($data) {
         $stats = [];
         $total = 0;
+        foreach($data as $d) {
             $stats[$d->currency] = (array_key_exists($d->currency, $stats)
                 ? $stats[$d->currency] + $d->value
                 : $d->value);
@@ -1367,14 +1359,9 @@ class GenerateReportsController extends Controller
         return $stats;
     }
 
-<<<<<<< HEAD
     public function toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, $filename = '')
     {
 
-=======
-    public function toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, $filename='') {
-
->>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
         if ($isEXCEL) {
             $rows = json_decode($data, true);
             $cols = array_reverse($cols);
@@ -1385,12 +1372,8 @@ class GenerateReportsController extends Controller
             $sheet->fromArray($header, NULL);
 
             $r = 2;
-<<<<<<< HEAD
-            foreach ($rows as $row) {
-=======
             foreach($rows as $row) {
                 if ($row == null) continue;
->>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
                 $c = 'A';
                 foreach ($cols as $col) {
                     if ($col == 'equ_val_sy') {
@@ -1407,12 +1390,7 @@ class GenerateReportsController extends Controller
         }
 
         if ($isPDF) {
-<<<<<<< HEAD
             $funny = function ($header, $rows, $cols, $append_rows = []) {
-=======
-            $funny = function($header, $rows, $cols, $append_rows=[]){
-
->>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
                 $fun_string = "<thead>";
                 if (count($header) != 0) {
                     $fun_string .= "<tr>";
@@ -1429,12 +1407,8 @@ class GenerateReportsController extends Controller
 
                 $fun_string .= "<tbody>";
                 if (count($cols) != 0) {
-<<<<<<< HEAD
-                    foreach ($rows as $row) {
-=======
                     foreach($rows as $row) {
                         if ($row == null) continue;
->>>>>>> 60ccfd2aae187149b965b2135fe9a194dce7a010
                         $fun_string .= "<tr>";
                         foreach ($cols as $col) {
                             if ($col == 'equ_val_sy') {
