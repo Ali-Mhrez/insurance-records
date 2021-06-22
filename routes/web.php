@@ -79,6 +79,9 @@ Route::get('/generate_detailed_reports', [GenerateReportsController::class,'deta
 Route::get('/generate_summary_reports', [GenerateReportsController::class,'summary_reports'])->name('reports.summary_reports');
 
 Route::get('/generate_comprehensive_reports', [GenerateReportsController::class,'comprehensive_reports'])->name('reports.comprehensive_reports');
+
+Route::get('/generate_owed_reports', [GenerateReportsController::class,'owed_reports'])->name('reports.owed_reports');
+
 });
 
 // --------------------BankController--------------------------------------------
