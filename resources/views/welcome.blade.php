@@ -368,7 +368,7 @@
                                 <div class="icon">
                                     <i class="fa fa-file"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">
+                                <a href="{{route('reports.index') }}" class="small-box-footer">
                                     مزيد من المعلومات <i class="fa fa-arrow-circle-right"></i>
                                 </a>
                             </div>
