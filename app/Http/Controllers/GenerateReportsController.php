@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ComprehensiveReports;
+use App\Http\Requests\DetailedReports;
+use App\Http\Requests\OwedReports;
+use App\Http\Requests\SummaryReports;
 use App\Models\Fcheck;
 use App\Models\User;
 
@@ -24,13 +28,13 @@ class GenerateReportsController extends Controller
         return view('reports.index');
     }
 
-    public function detailed_reports(Request $request)
+    public function detailed_reports(DetailedReports $request)
     {
-        $record_type = $request->record_type;
-        $report_type = $request->report_type;
+        $record_type = $request->record_type1;
+        $report_type = $request->report_type1;
         $from = $request->from;
         $to = $request->to;
-        $pdf_excel = $request->report;
+        $pdf_excel = $request->detailed_report;
 
         if (count($pdf_excel) == 0) {
             $isPDF = true;
@@ -983,10 +987,10 @@ class GenerateReportsController extends Controller
         $this->toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, 'D:/اسم بما');
     }
 
-    public function summary_reports(Request $request)
+    public function summary_reports(SummaryReports $request)
     {
-        $record_type = $request->record_type;
-        $pdf_excel = $request->report;
+        $record_type = $request->record_type2;
+        $pdf_excel = $request->summary_report;
 
         if ($pdf_excel == null) {
             $isPDF = true;
@@ -1068,10 +1072,10 @@ class GenerateReportsController extends Controller
         }
     }
 
-    public function comprehensive_reports(Request $request)
+    public function comprehensive_reports(ComprehensiveReports $request)
     {
-        $report_type = $request->report_type;
-        $pdf_excel = $request->report;
+        $report_type = $request->report_type4;
+        $pdf_excel = $request->comprehensive_report;
 
         if (count($pdf_excel) == 0) {
             $isPDF = true;
@@ -1152,11 +1156,11 @@ class GenerateReportsController extends Controller
 
     public function special_reports(Request $request)
     {
-        $report_type = $request->report_type;
+        $report_type = $request->report_type5;
         $number = $request->number;
-        $pdf_excel = $request->report;
+        $pdf_excel = $request->special_report;
 
-        if (count($pdf_excel) == 0) {
+        if ($pdf_excel == null) {
             $isPDF = true;
             $isEXCEL = false;
         } else if (count($pdf_excel) == 2) {
@@ -1217,10 +1221,14 @@ class GenerateReportsController extends Controller
                     ->where('fguarantee_id', $fguarantees[0]->id)
                     ->select('title', 'issued_by', 'date', 'new_merit')
                     ->get();
+            } else
+            {
+                session()->flash('error', 'لايوجد كفالة ممددة بهذا الرقم');
+                 return redirect()->action([GenerateReportsController::class, 'index']);
             }
 
             $data = $guarantees->concat($fguarantees);
-            //  dd($data);
+
             $header = ['ملاحظات', 'الحالة', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف', 'النوع', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
             $cols = ['notes', 'status', 'merit_date', 'date', 'bank_name', 'type', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
@@ -1238,7 +1246,7 @@ class GenerateReportsController extends Controller
             $data = $fcheck;
             $books = collect([]);
             if (count($fcheck) == 1)
-                $renewd = $fcheck[0]->renewd_check_id;
+            {    $renewd = $fcheck[0]->renewd_check_id;
 
             do {
                 $children = Fcheck::query()->where('id', $renewd)->get();
@@ -1255,7 +1263,11 @@ class GenerateReportsController extends Controller
                 $books = $books->concat($book);
             } while ($children[0]->renewd_check_id != NULL);
 
-
+        }
+        else {
+            session()->flash('error', 'لايوجد شيك مجدد بهذا الرقم');
+                 return redirect()->action([GenerateReportsController::class, 'index']);
+        }
 
             $header = ['ملاحظات', 'الحالة', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف', 'تاريخ العقد', 'رقم العقد', 'رقم الشيك', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
@@ -1272,9 +1284,9 @@ class GenerateReportsController extends Controller
 
 
     public function owed_reports(Request $request) {
-        $record_type = $request->record_type;
-        $report_type = $request->report_type;
-        $pdf_excel = $request->report;
+        $record_type = $request->record_type3;
+        $report_type = $request->report_type3;
+        $pdf_excel = $request->owed_report;
 
         if (count($pdf_excel) == 0) {
             $isPDF = true;
@@ -1349,12 +1361,104 @@ class GenerateReportsController extends Controller
                 $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             } else {
 
+                $checks = DB::table('checks')
+                        ->where('status', 'مدخل')
+                        ->get();
+
+                $data = collect($checks)->map(function($collection, $key) {
+
+                    $merit = strtotime($collection->merit_date);
+                    $today = strtotime(date("Y-m-d"));
+
+                    if ($merit >= $today) {
+                        $diff = $merit - $today;
+                        $years = floor($diff / (365*60*60*24));
+                        $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                        $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+                    }
+                });
+                
+                $header = ['اسم المصرف', 'رقم الشيك', 'موضوع العرض | المناقصة', 'المعادل السوري', 'نوع العملة', 'قيمة التأمينات', 'اسم العارض'];
+                $cols = ['bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             }
         } else {
             if ($report_type == 'الكفالات') {
+                $guarantees = DB::table('fguarantees')
+                        ->where(function ($query){
+                            $query ->where('type', 'تأمينات')
+                            ->orwhere('type', 'سلف');
+                        })
+                        ->where(function ($query){
+                            $query ->where('status', 'مدخلة')
+                            ->orwhere('status', 'ممددة من القسم')
+                            ->orwhere('status', 'ممددة من البنك');
+                        })
+                        ->get();
 
+                $data = collect($guarantees)->map(function($collection, $key) {
+
+                    $book = DB::table('fguarantee_books')
+                    ->where('guarantee_id', '=', $collection->id)
+                    ->latest('date')
+                    ->get();
+
+                    if (count($book) > 0) {
+                        $merit = strtotime($book[0]->new_merit);
+                    } else {
+                        $merit = strtotime($collection->merit_date);
+                    }
+                    $today = strtotime(date("Y-m-d"));
+
+                    if ($merit >= $today) {
+                        $diff = $merit - $today;
+                        $years = floor($diff / (365*60*60*24));
+                        $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                        $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+
+                        if ($years == 0 && $months == 0 && $days <= 20) {
+                            if (count($book) > 0) {
+                                $collection->btitle = $book[0]->title;
+                                $collection->bdate = $book[0]->date;
+                                $collection->bissued = $book[0]->issued;
+                                $collection->bmerit = $book[0]->new_merit;
+                            } else {
+                                $collection->btitle = 'لايوجد';
+                                $collection->bdate = 'لايوجد';
+                                $collection->bissued = 'لايوجد';
+                                $collection->bmerit = 'لايوجد';
+                            }
+                        }
+                    }
+                });
+                $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
+                $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
+                $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             } else {
 
+                $fchecks = DB::table('fchecks')
+                        ->where(function ($query){
+                            $query ->where('status', 'مدخل')
+                            ->orwhere('status', 'مجدد');
+                        })
+                        ->get();
+
+                $data = collect($fchecks)->map(function($collection, $key) {
+
+                    $merit = strtotime($collection->merit_date);
+                    $today = strtotime(date("Y-m-d"));
+
+                    if ($merit >= $today) {
+                        $diff = $merit - $today;
+                        $years = floor($diff / (365*60*60*24));
+                        $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                        $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+                    }
+                });
+                
+                $header = ['اسم المصرف', 'رقم الشيك', 'موضوع العرض | المناقصة', 'المعادل السوري', 'نوع العملة', 'قيمة التأمينات', 'اسم العارض'];
+                $cols = ['bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             }
         }
     }

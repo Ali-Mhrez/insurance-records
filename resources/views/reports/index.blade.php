@@ -1,8 +1,7 @@
 @extends("templates.operations")
 
 @section('title')
-    <!-- توليد تقارير -->
-    هذه الصفحة لاتعمل بشكل صحيح الرجاء عدم استخدامها مؤقتا
+    توليد تقارير
 @endsection
 
 @section('breadcrumb')
@@ -12,10 +11,11 @@
 
 
 @section('form')
+
     <div class="card card-navy">
         <div class="card-header d-flex p-3">
             <label class=" col-form-label text-md-right">التقارير</label>
-            <ul class="nav nav-pills ml-auto p-2">
+            <ul class="nav nav-pills ml-auto p-2" id="myTab">
                 <li class="nav-item"><a class="nav-link active" href="#first" data-toggle="tab">التقارير التفصيلية</a></li>
                 <li class="nav-item"><a class="nav-link" href="#second" data-toggle="tab">التقرير الكلي</a></li>
                 <li class="nav-item"><a class="nav-link" href="#third" data-toggle="tab">التقارير المستحقة</a></li>
@@ -29,18 +29,22 @@
                 <div class="form-group">
                     <div class="tab-content">
 
-                        <div class="tab-pane active" id="first">
+                        <div class="tab-pane fade show active" id="first">
                             <form action="{{ route('reports.detailed_reports') }}">
                                 <div class="row">
                                     <div class="form-group col-3">
                                         <label for="record_type1">نوع السجلات</label>
-                                        <select class="form-control @error('type') is-invalid @enderror" id="record_type1"
-                                            name="record_type">
+                                        <select class="form-control @error('record_type1') is-invalid @enderror" id="record_type1"
+                                            name="record_type1">
                                             {{ $insurance_array[''] = '- اختر النوع -' }}
+                                            @if (Auth::user()->hasPermission('initial_records-generate_reports'))
                                             {{ $insurance_array['initial'] = 'بدائية' }}
+                                            @endif
+                                            @if (Auth::user()->hasPermission('final_records-generate_reports'))
                                             {{ $insurance_array['final'] = 'نهائية' }}
+                                            @endif
                                             @foreach ($insurance_array as $key => $value)
-                                                <option value="{{ $key }}" @if ($key == old('type')) selected="selected" @endif>
+                                                <option value="{{ $key }}" @if ($key == old('record_type1')) selected="selected" @endif>
                                                     {{ $value }}</option>
                                             @endforeach
                                         </select>
@@ -50,8 +54,8 @@
                                     </div>
                                     <div class="form-group col-3">
                                         <label for="report_type1">نوع التقرير</label>
-                                        <select class="form-control @error('type') is-invalid @enderror" id="report_type1"
-                                            name="report_type">
+                                        <select class="form-control @error('report_type1') is-invalid @enderror" id="report_type1"
+                                            name="report_type1">
                                             {{ $report_array[''] = '- اختر النوع -' }}
                                             {{ $report_array['الكفالات المدخلة'] = 'الكفالات المدخلة' }}
                                             {{ $report_array['الكفالات الممددة'] = 'الكفالات الممددة' }}
@@ -71,7 +75,7 @@
                                             {{ $report_array['الدفعات المدخلة'] = 'الدفعات المدخلة' }}
                                             {{ $report_array['الدفعات المحررة'] = 'الدفعات المحررة' }}
                                             @foreach ($report_array as $key => $value)
-                                                <option value="{{ $key }}" @if ($key == old('type')) selected="selected" @endif>
+                                                <option value="{{ $key }}" @if ($key == old('report_type1')) selected="selected" @endif>
                                                     {{ $value }}</option>
                                             @endforeach
                                         </select>
@@ -81,32 +85,40 @@
                                     </div>
 
                                     <div class="form-group col-3">
-                                        <label for="date">من</label>
-                                        <input type="date" class="form-control @error('date') is-invalid @enderror"
-                                            id="from" name="from" value="{{ old('date') }}">
+                                        <label for="from">من</label>
+                                        <input type="date" class="form-control @error('from') is-invalid @enderror"
+                                            id="from" name="from" value="{{ old('from') }}">
+                                            @error('from')
+                                            <li class=" alert alert-danger">{{ $message }}</li>
+                                        @enderror
                                     </div>
 
 
                                     <div class="form-group col-3">
-                                        <label for="date">إلى</label>
-                                        <input type="date" class="form-control @error('date') is-invalid @enderror" id="to"
-                                            name="to" value="{{ old('date') }}">
+                                        <label for="to">إلى</label>
+                                        <input type="date" class="form-control @error('to') is-invalid @enderror" id="to"
+                                            name="to" value="{{ old('to') }}">
+                                            @error('to')
+                                            <li class=" alert alert-danger">{{ $message }}</li>
+                                        @enderror
                                     </div>
 
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf1"
-                                            value="pdf">
+                                        <input class="custom-control-input" type="checkbox" name="detailed_report[]" id="pdf1" value="pdf"
+                                         @if(old('detailed_report') !== null)  @if (in_array('pdf',old('detailed_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="pdf1" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel1"
-                                            value="excel">
+                                        <input class="custom-control-input" type="checkbox" name="detailed_report[]" id="excel1" value="excel"
+                                         @if(old('detailed_report') !== null)  @if (in_array('excel',old('detailed_report'))) checked @endif  @else{ '' } @endif>
                                         <label for="excel1" class="custom-control-label">Excel</label>
                                     </div>
-
                                 </div>
+                                @error('detailed_report')
+                                    <li class=" alert alert-danger">{{ $message }}</li>
+                                @enderror
                                 <div class="row justify-content-center mt-3">
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary btn-lg">تأكيد</button>
@@ -115,16 +127,20 @@
                             </form>
                         </div>
 
-                        <div class="tab-pane" id="second">
+                        <div class="tab-pane fade" id="second">
                             <form action="{{ route('reports.summary_reports') }}">
                                 <div class="row justify-content-center">
                                     <div class="form-group col-md-6">
                                         <label for="record_type2">نوع السجلات</label>
                                         <select class="form-control @error('type') is-invalid @enderror" id="record_type2"
-                                            name="record_type">
+                                            name="record_type2">
                                             {{ $insurance_array2[''] = '- اختر النوع -' }}
+                                            @if (Auth::user()->hasPermission('initial_records-generate_reports'))
                                             {{ $insurance_array2['initial'] = 'بدائية' }}
+                                            @endif
+                                            @if (Auth::user()->hasPermission('final_records-generate_reports'))
                                             {{ $insurance_array2['final'] = 'نهائية' }}
+                                            @endif
                                             @foreach ($insurance_array2 as $key => $value)
                                                 <option value="{{ $key }}" @if ($key == old('type')) selected="selected" @endif>
                                                     {{ $value }}</option>
@@ -137,17 +153,19 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf2"
-                                            value="pdf">
+                                        <input class="custom-control-input" type="checkbox" name="summary_report[]" id="pdf2"
+                                            value="pdf" @if(old('summary_report') !== null)  @if (in_array('pdf',old('summary_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="pdf2" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel2"
-                                            value="excel">
+                                        <input class="custom-control-input" type="checkbox" name="summary_report[]" id="excel2"
+                                            value="excel" @if(old('summary_report') !== null)  @if (in_array('excel',old('summary_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="excel2" class="custom-control-label">Excel</label>
                                     </div>
-
                                 </div>
+                                @error('summary_report')
+                                <li class=" alert alert-danger">{{ $message }}</li>
+                            @enderror
                                 <div class="row justify-content-center mt-3">
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary btn-lg">تأكيد</button>
@@ -155,16 +173,20 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="tab-pane" id="third">
+                        <div class="tab-pane fade" id="third">
                             <form action="{{ route('reports.owed_reports') }}">
                                 <div class="row justify-content-center">
                                     <div class="form-group col-3">
                                         <label for="record_type3">نوع السجلات</label>
                                         <select class="form-control @error('type') is-invalid @enderror" id="record_type3"
-                                            name="record_type">
+                                            name="record_type3">
                                             {{ $insurance_array3[''] = '- اختر النوع -' }}
+                                            @if (Auth::user()->hasPermission('initial_records-generate_reports'))
                                             {{ $insurance_array3['initial'] = 'بدائية' }}
+                                            @endif
+                                            @if (Auth::user()->hasPermission('final_records-generate_reports'))
                                             {{ $insurance_array3['final'] = 'نهائية' }}
+                                            @endif
                                             @foreach ($insurance_array3 as $key => $value)
                                                 <option value="{{ $key }}" @if ($key == old('type')) selected="selected" @endif>
                                                     {{ $value }}</option>
@@ -177,7 +199,7 @@
                                     <div class="form-group col-3">
                                         <label for="report_type3">نوع التقرير</label>
                                         <select class="form-control @error('type') is-invalid @enderror" id="report_type3"
-                                            name="report_type">
+                                            name="report_type3">
                                             {{ $report_array3[''] = '- اختر النوع -' }}
                                             {{ $report_array3['الكفالات'] = 'الكفالات' }}
                                             {{ $report_array3['الشيكات'] = 'الشيكات' }}
@@ -195,16 +217,19 @@
 
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf3"
-                                            value="pdf">
+                                        <input class="custom-control-input" type="checkbox" name="owed_report[]" id="pdf3" value="pdf"
+                                         @if(old('owed_report') !== null)  @if (in_array('pdf',old('owed_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="pdf3" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel3"
-                                            value="excel">
+                                        <input class="custom-control-input" type="checkbox" name="owed_report[]" id="excel3" value="excel"
+                                         @if(old('owed_report') !== null)  @if (in_array('excel',old('owed_report'))) checked @endif  @else{ '' } @endif>
                                         <label for="excel3" class="custom-control-label">Excel</label>
                                     </div>
                                 </div>
+                                @error('owed_report')
+                                    <li class=" alert alert-danger">{{ $message }}</li>
+                                @enderror
 
                                 <div class="row justify-content-center mt-3">
                                     <div class="form-group">
@@ -213,13 +238,13 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="tab-pane" id="fourth">
+                        <div class="tab-pane fade" id="fourth">
                             <form action="{{ route('reports.comprehensive_reports') }}">
                                 <div class="row justify-content-center">
                                     <div class="form-group col-6">
                                         <label for="report_type4">نوع التقرير</label>
                                         <select class="form-control @error('type') is-invalid @enderror" id="report_type4"
-                                            name="report_type">
+                                            name="report_type4">
                                             {{ $report_array4[''] = '- اختر النوع -' }}
                                             {{ $report_array4['الكفالات'] = 'الكفالات' }}
                                             {{ $report_array4['الشيكات'] = 'الشيكات' }}
@@ -238,17 +263,19 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf4"
-                                            value="pdf">
+                                        <input class="custom-control-input" type="checkbox" name="comprehensive_report[]" id="pdf4"
+                                            value="pdf" @if(old('comprehensive_report') !== null)  @if (in_array('pdf',old('comprehensive_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="pdf4" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel4"
-                                            value="excel">
+                                        <input class="custom-control-input" type="checkbox" name="comprehensive_report[]" id="excel4"
+                                            value="excel" @if(old('comprehensive_report') !== null)  @if (in_array('excel',old('comprehensive_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="excel4" class="custom-control-label">Excel</label>
                                     </div>
-
                                 </div>
+                                @error('comprehensive_report')
+                                <li class=" alert alert-danger">{{ $message }}</li>
+                            @enderror
                                 <div class="row justify-content-center mt-3">
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-primary btn-lg">تأكيد</button>
@@ -256,15 +283,13 @@
                                 </div>
                             </form>
                         </div>
-
-
-                        <div class="tab-pane" id="fifth">
+                        <div class="tab-pane fade" id="fifth">
                             <form action="{{ route('reports.special_reports') }}">
                                 <div class="row justify-content-center">
                                     <div class="form-group col-3">
                                         <label for="type">نوع التقرير</label>
-                                        <select class="form-control @error('type') is-invalid @enderror" id="report_type"
-                                            name="report_type">
+                                        <select class="form-control @error('type') is-invalid @enderror" id="report_type5"
+                                            name="report_type5">
                                             {{ $report_array5[''] = '- اختر النوع -' }}
                                             {{ $report_array5['كفالة ممددة'] = 'كفالة ممددة' }}
                                             {{ $report_array5['شيك مجدد'] = 'شيك مجدد' }}
@@ -290,12 +315,12 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="pdf5"
+                                        <input class="custom-control-input" type="checkbox" name="special_report[]" id="pdf5"
                                             value="pdf">
                                         <label for="pdf5" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="report[]" id="excel5"
+                                        <input class="custom-control-input" type="checkbox" name="special_report[]" id="excel5"
                                             value="excel">
                                         <label for="excel5" class="custom-control-label">Excel</label>
                                     </div>
@@ -462,4 +487,5 @@ $(function() {
 });
 </script> --}}
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
 @endsection
