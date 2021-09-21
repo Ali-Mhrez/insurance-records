@@ -387,9 +387,30 @@
                                 <div class="icon">
                                     <i class="fa fa-university"></i>
                                 </div>
-                                <a href="{{ route('bank.list') }}" class="small-box-footer">
-                                    مزيد من المعلومات <i class="fa fa-arrow-circle-right"></i>
+                                <a class=" small-box-footer btn btn-info" data-toggle="collapse" href="#banks"
+                                    role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+
+                                    مزيد من المعلومات <i class="fas fa-plus"></i>
+
                                 </a>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="collapse multi-collapse" id="banks">
+                                            <div class="row text-center">
+                                                <div class="col-6">
+                                                    <a href="{{ route('bank.list') }}" class="text-white">
+                                                        عرض البنوك <i class="fa fa-arrow-circle-right"></i>
+                                                    </a>
+                                                </div>
+                                                <div class=" col-6">
+                                                    <a href="{{ route('bank.create') }}" class="text-white">
+                                                        إضافة بنك <i class="fa fa-arrow-circle-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!-- ./col -->

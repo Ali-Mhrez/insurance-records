@@ -90,11 +90,10 @@ Route::get('/generate_special_reports', [GenerateReportsController::class,'speci
 Route::group(['prefix' => 'banks', 'middleware' => ['auth','role:administrator']], function() {
 
 Route::get('/', [BankController::class, 'index'])->name('bank.list');
-
-Route::get('/create', [BankController::class, 'store'])->name('bank.store');
-
-Route::post('/update', [BankController::class, 'update'])->name('bank.update');
-
+Route::get('/create', [BankController::class, 'create'])->name('bank.create');
+Route::get('/store', [BankController::class, 'store'])->name('bank.store');
+Route::get('/edit/{id}', [BankController::class, 'edit'])->name('bank.edit');
+Route::get('/update/{id}', [BankController::class, 'update'])->name('bank.update');
 Route::get('/delete/{id}', [BankController::class, 'delete'])->name('bank.delete');
 });
 

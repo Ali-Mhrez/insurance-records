@@ -15,6 +15,10 @@ class BankController extends Controller
         return view('bank.list', ['banks' => $banks]);
     }
 
+    public function create() {
+        return view('bank.create');
+    }
+
     public function store(StoreBanks $request) {
         $bank = new Bank;
         $bank->name = $request->name;
@@ -23,8 +27,16 @@ class BankController extends Controller
         return redirect()->action([BankController::class, 'index']);
     }
 
-    public function update(Request $request) {
-        $bank = Bank::find($request['id']);
+    public function edit($id) {
+        $bank = Bank::find($id);
+        return view('bank.edit', ['bank' => $bank]);
+    }
+
+    public function update(Request $request, $id) {
+        $validated = $request->validate([
+            'name' => 'bail|required|unique:banks|max:30',
+        ]);
+        $bank = Bank::find($id);
         $bank->name = $request['name'];
         $bank->save();
         session()->flash('success', 'تم تعديل البيانات بنجاح');
