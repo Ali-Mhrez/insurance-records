@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use App\Http\Requests\StoreBanks;
 use App\Http\Controllers\Controller;
 use App\Models\Bank;
@@ -45,8 +46,12 @@ class BankController extends Controller
 
     public function delete($id) {
         $bank = Bank::find($id);
-        $bank->delete();
-        session()->flash('success', 'تم حذف البيانات بنجاح');
-        return redirect()->action([BankController::class, 'index']);
+        try {
+            $bank->delete();
+            session()->flash('success', 'تم حذف البيانات بنجاح');
+            return redirect()->action([BankController::class, 'index']);
+        } catch(QueryException $e) {
+            return redirect()->action([BankController::class, 'index'])->with('error', 'لايمكن حذف البنك');
+        }
     }
 }
