@@ -33,7 +33,7 @@ class CommonRules extends FormRequest
             'currency' => 'required',
             'equ_val_sy' => 'exclude_if:currency,ليرة سورية|required|integer|min:0',
             'matter' => 'bail|required|max:30',
-            'bank_name' => 'exclude_if:type,دفعة نقدية|required',
+            'bank_id' => 'exclude_if:type,دفعة نقدية|required',
             'date' => 'bail|required|date',
             'status' => 'required',
             'notes' => 'bail|max:40',
@@ -66,7 +66,7 @@ class CommonRules extends FormRequest
             'matter.required' => 'يرجى إدخال الموضوع',
             'matter.max' => 'تم تجاوز الحد المسموح به لعدد المحارف (30 محرف كحد أقصى)',
 
-            'bank_name.required' => 'يرجى اختيار اسم البنك',
+            'bank_id.required' => 'يرجى اختيار اسم البنك',
 
             'number.required' => 'يرجى إدخال الرقم ',
             'number.unique' => 'الرقم  موجود بالفعل',

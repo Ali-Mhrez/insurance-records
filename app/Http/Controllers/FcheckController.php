@@ -12,6 +12,7 @@ use App\Models\Fcheck;
 use App\Models\FcheckBook;
 use App\Models\FcheckResolution;
 use App\Models\Fguarantee;
+use App\Models\Bank;
 use Carbon\Carbon;
 
 class FcheckController extends Controller
@@ -25,7 +26,9 @@ class FcheckController extends Controller
         $check = Fcheck::find($id);
         $books = $check->books()->get();
         $resolution = $check->resolution()->get();
-        return view('fcheck.show', ['check' => $check, 'books' => $books, 'resolution' => $resolution]);
+        $bank = Bank::find($check->bank_id)->name;
+        return view('fcheck.show', 
+            ['check' => $check, 'books' => $books, 'resolution' => $resolution, 'bank_name' => $bank]);
     }
 
     public function create() {
@@ -43,7 +46,7 @@ class FcheckController extends Controller
         $data->contract_date=$request->contract_date;
         $data->number = $request->number;
         $data->date = $request->date;
-        $data->bank_name = $request->bank_name;
+        $data->bank_id = $request->bank_id;
         $data->merit_date = Carbon::parse($request->date)->addYears(3);
         $data->status = $request->status;
         $data->notes = $request->notes;
@@ -160,7 +163,7 @@ class FcheckController extends Controller
         $data['contract_date'] = $request->contract_date;
         $data['number'] = $request->number;
         $data['date'] = $request->date;
-        $data['bank_name'] = $request->bank_name;
+        $data['bank_id'] = $request->bank_id;
         $data['merit_date'] = Carbon::parse($request->date)->addYears(3);
         $data['status'] = $request->status;
         $data['notes'] = $request->notes;

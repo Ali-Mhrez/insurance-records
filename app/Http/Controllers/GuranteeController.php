@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Guarantee;
+use App\Models\Bank;
 use App\Models\GuaranteeBook;
 use App\Models\GuaranteeResolution;
 use App\Http\Requests\GuaranteeCreate;
@@ -26,7 +27,9 @@ class GuranteeController extends Controller
         $guarantee = Guarantee::find($id);
         $books = $guarantee->books()->get();
         $resolution = $guarantee->resolution()->get();
-        return view('guarantee.show', ['guarantee' => $guarantee, 'books' => $books, 'resolution' => $resolution]);
+        $bank = Bank::find($guarantee->bank_id)->name;
+        return view('guarantee.show', 
+            ['guarantee' => $guarantee, 'books' => $books, 'resolution' => $resolution, 'bank_name' => $bank]);
     }
 
     public function create()
@@ -44,7 +47,7 @@ class GuranteeController extends Controller
         $data->matter = $request->matter;
         $data->number = $request->number;
         $data->date = $request->date;
-        $data->bank_name = $request->bank_name;
+        $data->bank_id = $request->bank_id;
         $data->merit_date = $request->merit_date;
         $data->status = $request->status;
         $data->type = $request->type;
@@ -168,6 +171,7 @@ class GuranteeController extends Controller
 
     public function update(GuaranteeEdit $request, $id)
     {
+        return "SDFSDF";
         $data = [];
         $data['bidder_name'] = $request->bidder_name;
         $data['value'] = $request->value;
@@ -180,7 +184,7 @@ class GuranteeController extends Controller
         $data['matter'] = $request->matter;
         $data['number'] = $request->number;
         $data['date'] = $request->date;
-        $data['bank_name'] = $request->bank_name;
+        $data['bank_id'] = $request->bank_id;
         $data['merit_date'] = $request->merit_date;
         $data['status'] = $request->status;
         $data['type'] = $request->type;

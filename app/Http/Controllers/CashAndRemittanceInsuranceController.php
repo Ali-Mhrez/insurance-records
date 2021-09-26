@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\CashPaymentAndRemittanceInsurance;
 use App\Models\PaymentAndRemittanceBook;
 use App\Models\PaymentAndRemittanceResolution;
+use App\Models\Bank;
 
 class CashAndRemittanceInsuranceController extends Controller
 {
@@ -22,7 +23,13 @@ class CashAndRemittanceInsuranceController extends Controller
         $payment = CashPaymentAndRemittanceInsurance::find($id);
         $books = $payment->book()->get();
         $resolution = $payment->resolution()->get();
-        return view('payment.show', ['payment' => $payment, 'books' => $books, 'resolution' => $resolution]);
+        if ($payment['type'] == 'حوالة') {
+            $bank = Bank::find($payment->bank_id)->name;
+            return view('payment.show', 
+            ['payment' => $payment, 'books' => $books, 'resolution' => $resolution, 'bank_name' => $bank]);
+        } else {
+            return view('payment.show', ['payment' => $payment, 'books' => $books, 'resolution' => $resolution]);
+        }
     }
 
     public function find($id) {
@@ -46,12 +53,9 @@ class CashAndRemittanceInsuranceController extends Controller
         $data->status = $request->status;
         $data->type = $request->type;
         $data->notes = $request->notes;
-
+        
         if ($request['type'] == 'حوالة') {
-            $data->bank_name = $request->bank_name;
-        }
-        else{
-            $data->bank_name = null;
+            $data->bank_id = $request->bank_id;
         }
 
         $data->save();
@@ -125,10 +129,7 @@ class CashAndRemittanceInsuranceController extends Controller
         $data->notes = $request->notes;
 
         if ($request['type'] == 'حوالة') {
-            $data->bank_name = $request->bank_name;
-        }
-        else{
-            $data->bank_name = null;
+            $data->bank_id = $request->bank_id;
         }
 
         $data->save();

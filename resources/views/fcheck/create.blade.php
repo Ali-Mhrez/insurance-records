@@ -106,15 +106,15 @@
                 @enderror
             </div>
             <div class="form-group col-md-4">
-                <label for="bank_name">اسم المصرف الكفيل</label>
-                <select type="text" name="bank_name" id="bank_name"
-                    class="form-control @error('bank_name') is-invalid @enderror">
+                <label for="bank_id">اسم المصرف الكفيل</label>
+                <select type="text" name="bank_id" id="bank_id"
+                    class="form-control @error('bank_id') is-invalid @enderror">
                     <option value="" selected="selected">- اختر البنك -</option>
                     @foreach ($banks ?? '' as $bank)
-                        <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name')) selected="selected" @endif>{{ $bank->name }}</option>
+                        <option value="{{ $bank->id }}" @if ($bank->id == old('bank_id')) selected="selected" @endif>{{ $bank->name }}</option>
                     @endforeach
                 </select>
-                @error('bank_name')
+                @error('bank_id')
                     <li class=" alert alert-danger">{{ $message }}</li>
                 @enderror
             </div>

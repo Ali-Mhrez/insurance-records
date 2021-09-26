@@ -8,6 +8,7 @@ use App\Http\Requests\FpaymentEdit;
 use App\Http\Requests\Resolutions;
 use App\Models\FpaymentResolution;
 use App\Models\Fpayment;
+use App\Models\Bank;
 use App\Models\FpaymentBook;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,13 @@ class FpaymentController extends Controller
         $payment = Fpayment::find($id);
         $books = $payment->books()->get();
         $resolution = $payment->resolution()->get();
-        return view('fpayment.show', ['payment' => $payment, 'books' => $books, 'resolution' => $resolution]);
+        if ($payment['type'] == 'حوالة') {
+            $bank = Bank::find($payment->bank_id)->name;
+            return view('fpayment.show', 
+            ['payment' => $payment, 'books' => $books, 'resolution' => $resolution, 'bank_name' => $bank]);
+        } else {
+            return view('fpayment.show', ['payment' => $payment, 'books' => $books, 'resolution' => $resolution]);
+        }
     }
 
     public function create() {
@@ -43,13 +50,10 @@ class FpaymentController extends Controller
         $data->status = $request->status;
         $data->type = $request->type;
         if ($request['type'] == 'حوالة') {
-            $data->bank_name = $request->bank_name;
+            $data->bank_id = $request->bank_id;
         }
-        else{
-            $data->bank_name = null;
-        }
-        $data->notes = $request->notes;
 
+        $data->notes = $request->notes;
         $data->save();
         return redirect()->action([FpaymentController::class, 'index']);
     }
@@ -127,10 +131,7 @@ class FpaymentController extends Controller
         $data['status'] = $request->status;
         $data['type'] = $request->type;
         if ($request['type'] == 'حوالة') {
-            $data['bank_name'] = $request->bank_name;
-        }
-        else{
-            $data['bank_name'] = null;
+            $data['bank_id'] = $request->bank_id;
         }
         $data['notes'] = $request->notes;
         Fpayment::where('id', $id)->update($data);

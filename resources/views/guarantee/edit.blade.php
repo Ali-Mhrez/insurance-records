@@ -98,10 +98,10 @@
             @enderror
         </div>
         <div class="form-group col-md-4">
-            <label for="bank_name">اسم المصرف الكفيل</label>
-            <select type="text" class="form-control" id="bank_name" name="bank_name">
+            <label for="bank_id">اسم المصرف الكفيل</label>
+            <select type="text" class="form-control" id="bank_id" name="bank_id">
                 @foreach ($banks as $bank)
-                    <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name', $guarantee->bank_name))
+                    <option value="{{ $bank->id }}" @if ($bank->id == old('bank_id', $guarantee->bank_id))
                         selected="selected"
                 @endif
                 >{{ $bank->name }}</option>

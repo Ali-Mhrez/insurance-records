@@ -23,7 +23,8 @@ class CreateFpaymentsTable extends Migration
             $table->string('contract_number');
             $table->date('contract_date');
             $table->string('number')->unique();
-            $table->string('bank_name')->nullable();
+            $table->unsignedBigInteger('bank_id')->nullable();
+            $table->foreign('bank_id')->references('id')->on('banks')->onUpdate('cascade');
             $table->date('date');
             $table->enum('status', ['مدخلة', 'محررة', 'مصادرة']);
             $table->enum('type', ['دفعة نقدية', 'حوالة']);

@@ -8,6 +8,7 @@ use App\Http\Requests\OwedReports;
 use App\Http\Requests\SummaryReports;
 use App\Models\Fcheck;
 use App\Models\User;
+use App\Models\Bank;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -69,7 +70,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
 
                     break;
 
@@ -120,7 +121,7 @@ class GenerateReportsController extends Controller
                             'guarantees.matter',
                             'guarantees.number',
                             'guarantees.date',
-                            'guarantees.bank_name',
+                            'guarantees.bank_id',
                             'guarantees.merit_date',
                             'guarantees.notes',
                             'guarantee_books.title as btitle',
@@ -132,7 +133,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'تاريخ الاستحقاق بعد التمديد', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bmerit', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bmerit', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الكفالات المحررة':
@@ -160,7 +161,7 @@ class GenerateReportsController extends Controller
                             'guarantees.matter',
                             'guarantees.number',
                             'guarantees.date',
-                            'guarantees.bank_name',
+                            'guarantees.bank_id',
                             'guarantees.merit_date',
                             'guarantees.notes',
                             'guarantee_books.title as btitle',
@@ -172,7 +173,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الكفالات المصادرة':
@@ -200,7 +201,7 @@ class GenerateReportsController extends Controller
                             'guarantees.matter',
                             'guarantees.number',
                             'guarantees.date',
-                            'guarantees.bank_name',
+                            'guarantees.bank_id',
                             'guarantees.merit_date',
                             'guarantees.notes',
                             'guarantee_books.title as btitle',
@@ -212,7 +213,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الكفالات المسيلة':
@@ -240,7 +241,7 @@ class GenerateReportsController extends Controller
                             'guarantees.matter',
                             'guarantees.number',
                             'guarantees.date',
-                            'guarantees.bank_name',
+                            'guarantees.bank_id',
                             'guarantees.merit_date',
                             'guarantees.notes',
                             'guarantee_books.title as btitle',
@@ -252,7 +253,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'كفالات السلف المدخلة':
@@ -265,7 +266,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
 
                     break;
 
@@ -297,7 +298,7 @@ class GenerateReportsController extends Controller
                             'guarantees.matter',
                             'guarantees.number',
                             'guarantees.date',
-                            'guarantees.bank_name',
+                            'guarantees.bank_id',
                             'guarantees.merit_date',
                             'guarantees.notes',
                             'guarantee_books.title as btitle',
@@ -309,7 +310,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'تاريخ الاستحقاق بعد التمديد', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bmerit', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bmerit', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'كفالات السلف المصادرة':
@@ -337,7 +338,7 @@ class GenerateReportsController extends Controller
                             'guarantees.matter',
                             'guarantees.number',
                             'guarantees.date',
-                            'guarantees.bank_name',
+                            'guarantees.bank_id',
                             'guarantees.merit_date',
                             'guarantees.notes',
                             'guarantee_books.title as btitle',
@@ -349,7 +350,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'كفالات السلف المحررة':
@@ -377,7 +378,7 @@ class GenerateReportsController extends Controller
                             'guarantees.matter',
                             'guarantees.number',
                             'guarantees.date',
-                            'guarantees.bank_name',
+                            'guarantees.bank_id',
                             'guarantees.merit_date',
                             'guarantees.notes',
                             'guarantee_books.title as btitle',
@@ -389,7 +390,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'كفالات السلف المسيلة':
@@ -417,7 +418,7 @@ class GenerateReportsController extends Controller
                             'guarantees.matter',
                             'guarantees.number',
                             'guarantees.date',
-                            'guarantees.bank_name',
+                            'guarantees.bank_id',
                             'guarantees.merit_date',
                             'guarantees.notes',
                             'guarantee_books.title as btitle',
@@ -429,7 +430,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الشيكات المدخلة':
@@ -440,7 +441,7 @@ class GenerateReportsController extends Controller
                         ->get();
 
                     $header = ['اسم المصرف', 'رقم الشيك', 'موضوع العرض | المناقصة', 'المعادل السوري', 'نوع العملة', 'قيمة التأمينات', 'اسم العارض'];
-                    $cols = ['bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الشيكات المحررة':
@@ -466,7 +467,7 @@ class GenerateReportsController extends Controller
                             'checks.equ_val_sy',
                             'checks.matter',
                             'checks.number',
-                            'checks.bank_name',
+                            'checks.bank_id',
                             'checks.notes',
                             'check_books.title as btitle',
                             'check_books.issued_by as bissued',
@@ -476,7 +477,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'اسم المصرف الكفيل', 'رقم الشيك', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
 
@@ -516,7 +517,7 @@ class GenerateReportsController extends Controller
                             'cash_payment_and_remittance_insurances.equ_val_sy',
                             'cash_payment_and_remittance_insurances.matter',
                             'cash_payment_and_remittance_insurances.number',
-                            'cash_payment_and_remittance_insurances.bank_name',
+                            'cash_payment_and_remittance_insurances.bank_id',
                             'cash_payment_and_remittance_insurances.notes',
                             'payment_and_remittance_books.title as btitle',
                             'payment_and_remittance_books.issued_by as bissued',
@@ -526,7 +527,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'اسم المصرف الكفيل', 'رقم الدفعة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
             }
         }
@@ -543,7 +544,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'تاريخ العقد', 'رقم العقد', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'merit_date', 'date', 'bank_name', 'contract_date', 'contract_number', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'merit_date', 'date', 'bank_id', 'contract_date', 'contract_number', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الكفالات الممددة':
@@ -575,7 +576,7 @@ class GenerateReportsController extends Controller
                             'fguarantees.matter',
                             'fguarantees.number',
                             'fguarantees.date',
-                            'fguarantees.bank_name',
+                            'fguarantees.bank_id',
                             'fguarantees.merit_date',
                             'fguarantees.notes',
                             'fguarantee_books.title as btitle',
@@ -587,7 +588,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'تاريخ الاستحقاق بعد التمديد', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bmerit', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bmerit', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الكفالات المحررة':
@@ -615,7 +616,7 @@ class GenerateReportsController extends Controller
                             'fguarantees.matter',
                             'fguarantees.number',
                             'fguarantees.date',
-                            'fguarantees.bank_name',
+                            'fguarantees.bank_id',
                             'fguarantees.merit_date',
                             'fguarantees.notes',
                             'fguarantee_books.title as btitle',
@@ -627,7 +628,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الكفالات المصادرة':
@@ -655,7 +656,7 @@ class GenerateReportsController extends Controller
                             'fguarantees.matter',
                             'fguarantees.number',
                             'fguarantees.date',
-                            'fguarantees.bank_name',
+                            'fguarantees.bank_id',
                             'fguarantees.merit_date',
                             'fguarantees.notes',
                             'fguarantee_books.title as btitle',
@@ -667,7 +668,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الكفالات المسيلة':
@@ -695,7 +696,7 @@ class GenerateReportsController extends Controller
                             'fguarantees.matter',
                             'fguarantees.number',
                             'fguarantees.date',
-                            'fguarantees.bank_name',
+                            'fguarantees.bank_id',
                             'fguarantees.merit_date',
                             'fguarantees.notes',
                             'fguarantee_books.title as btitle',
@@ -707,7 +708,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'كفالات السلف المدخلة':
@@ -720,7 +721,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'تاريخ العقد', 'رقم العقد', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'merit_date', 'date', 'bank_name', 'contract_date', 'contract_number', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'merit_date', 'date', 'bank_id', 'contract_date', 'contract_number', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
 
                     break;
 
@@ -752,7 +753,7 @@ class GenerateReportsController extends Controller
                             'fguarantees.matter',
                             'fguarantees.number',
                             'fguarantees.date',
-                            'fguarantees.bank_name',
+                            'fguarantees.bank_id',
                             'fguarantees.merit_date',
                             'fguarantees.notes',
                             'fguarantee_books.title as btitle',
@@ -764,7 +765,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'تاريخ الاستحقاق بعد التمديد', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bmerit', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bmerit', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'كفالات السلف المصادرة':
@@ -792,7 +793,7 @@ class GenerateReportsController extends Controller
                             'fguarantees.matter',
                             'fguarantees.number',
                             'fguarantees.date',
-                            'fguarantees.bank_name',
+                            'fguarantees.bank_id',
                             'fguarantees.merit_date',
                             'fguarantees.notes',
                             'fguarantee_books.title as btitle',
@@ -804,7 +805,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'كفالات السلف المحررة':
@@ -832,7 +833,7 @@ class GenerateReportsController extends Controller
                             'fguarantees.matter',
                             'fguarantees.number',
                             'fguarantees.date',
-                            'fguarantees.bank_name',
+                            'fguarantees.bank_id',
                             'fguarantees.merit_date',
                             'fguarantees.notes',
                             'fguarantee_books.title as btitle',
@@ -844,7 +845,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'كفالات السلف المسيلة':
@@ -872,7 +873,7 @@ class GenerateReportsController extends Controller
                             'fguarantees.matter',
                             'fguarantees.number',
                             'fguarantees.date',
-                            'fguarantees.bank_name',
+                            'fguarantees.bank_id',
                             'fguarantees.merit_date',
                             'fguarantees.notes',
                             'fguarantee_books.title as btitle',
@@ -884,7 +885,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف الكفيل', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الشيكات المدخلة':
@@ -895,7 +896,7 @@ class GenerateReportsController extends Controller
                         ->get();
 
                     $header = ['اسم المصرف', 'تاريخ العقد', 'رقم العقد', 'رقم الشيك', 'موضوع العرض | المناقصة', 'المعادل السوري', 'نوع العملة', 'قيمة التأمينات', 'اسم العارض'];
-                    $cols = ['bank_name', 'contract_date', 'contract_number', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['bank_id', 'contract_date', 'contract_number', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
 
                 case 'الشيكات المحررة':
@@ -922,7 +923,7 @@ class GenerateReportsController extends Controller
                             'fchecks.equ_val_sy',
                             'fchecks.matter',
                             'fchecks.number',
-                            'fchecks.bank_name',
+                            'fchecks.bank_id',
                             'fchecks.notes',
                             'fcheck_books.title as btitle',
                             'fcheck_books.issued_by as bissued',
@@ -932,7 +933,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'اسم المصرف الكفيل', 'رقم الشيك', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
                 case 'الدفعات المدخلة':
                     $data = DB::table('fpayments')
@@ -969,7 +970,7 @@ class GenerateReportsController extends Controller
                             'fpayments.equ_val_sy',
                             'fpayments.matter',
                             'fpayments.number',
-                            'fpayments.bank_name',
+                            'fpayments.bank_id',
                             'fpayments.notes',
                             'fpayment_books.title as btitle',
                             'fpayment_books.issued_by as bissued',
@@ -979,7 +980,7 @@ class GenerateReportsController extends Controller
 
                     $header = ['الملاحظات', 'النوع', 'تاريخه', 'رقم الكتاب', 'اسم المصرف الكفيل', 'رقم الدفعة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                    $cols = ['notes', 'bissued', 'bdate', 'btitle', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                     break;
             }
         }
@@ -1097,12 +1098,12 @@ class GenerateReportsController extends Controller
         if ($report_type == 'الكفالات') {
             $guarantees = DB::table('guarantees')
                 ->where('guarantees.type', 'تأمينات')
-                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_name', 'status', 'notes')
+                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_id', 'status', 'notes')
                 ->get();
 
             $fguarantees = DB::table('fguarantees')
                 ->where('fguarantees.type', 'تأمينات')
-                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_name', 'status', 'notes')
+                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_id', 'status', 'notes')
                 ->get();
 
 
@@ -1110,17 +1111,17 @@ class GenerateReportsController extends Controller
             //  dd($data);
             $header = ['الحالة', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-            $cols = ['status', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+            $cols = ['status', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
             $append_rows = $this->getStats($data);
         }
 
         if ($report_type == 'الشيكات') {
             $checks = DB::table('checks')
-                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_name', 'status', 'notes')
+                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_id', 'status', 'notes')
                 ->get();
 
             $fchecks = DB::table('fchecks')
-                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_name', 'status', 'notes')
+                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_id', 'status', 'notes')
                 ->get();
 
 
@@ -1128,17 +1129,17 @@ class GenerateReportsController extends Controller
             //  dd($data);
             $header = ['الحالة', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف', 'الرقم', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-            $cols = ['status', 'merit_date', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+            $cols = ['status', 'merit_date', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
             $append_rows = $this->getStats($data);
         }
 
         if ($report_type == 'الدفعات النقدية | الحوالات') {
             $cash_payment_and_remittance_insurances = DB::table('cash_payment_and_remittance_insurances')
-                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'bank_name', 'status', 'type', 'notes')
+                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'bank_id', 'status', 'type', 'notes')
                 ->get();
 
             $fpayments = DB::table('fpayments')
-                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'bank_name', 'status', 'type', 'notes')
+                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'bank_id', 'status', 'type', 'notes')
                 ->get();
 
 
@@ -1146,7 +1147,7 @@ class GenerateReportsController extends Controller
             //  dd($data);
             $header = ['الحالة', 'النوع', 'تاريخ التقديم', 'اسم المصرف', 'الرقم', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-            $cols = ['status', 'type', 'date', 'bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+            $cols = ['status', 'type', 'date', 'bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
             $append_rows = $this->getStats($data);
         }
         $this->toPDF($header, $data, $cols, $append_rows, $isPDF, $isEXCEL, 'D:/اسم ما');
@@ -1194,7 +1195,7 @@ class GenerateReportsController extends Controller
                     'number',
                     'date',
                     'merit_date',
-                    'bank_name',
+                    'bank_id',
                     'type',
                     'status',
                     'notes'
@@ -1208,7 +1209,7 @@ class GenerateReportsController extends Controller
                     $query->where('fguarantees.status', 'ممددة من القسم')
                         ->orwhere('fguarantees.status', 'ممددة من البنك');
                 })
-                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_name', 'type', 'status', 'notes')
+                ->select('bidder_name', 'value', 'currency', 'equ_val_sy', 'matter', 'number', 'date', 'merit_date', 'bank_id', 'type', 'status', 'notes')
                 ->get();
 
             if ($guarantees->isNotEmpty()) {
@@ -1231,7 +1232,7 @@ class GenerateReportsController extends Controller
 
             $header = ['ملاحظات', 'الحالة', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف', 'النوع', 'رقم الكفالة', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-            $cols = ['notes', 'status', 'merit_date', 'date', 'bank_name', 'type', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+            $cols = ['notes', 'status', 'merit_date', 'date', 'bank_id', 'type', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
             $append_rows = [];
 
             $header2 = ['تاريخ الاستحقاق الجديد', 'تاريخ الكتاب', 'صادر عن', 'رقم الكتاب'];
@@ -1271,7 +1272,7 @@ class GenerateReportsController extends Controller
 
             $header = ['ملاحظات', 'الحالة', 'تاريخ الاستحقاق', 'تاريخ التقديم', 'اسم المصرف', 'تاريخ العقد', 'رقم العقد', 'رقم الشيك', 'الموضوع', 'المعادل السوري', 'العملة', 'القيمة', 'اسم العارض'];
 
-            $cols = ['notes', 'status', 'merit_date', 'date', 'bank_name', 'contract_date', 'contract_number', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+            $cols = ['notes', 'status', 'merit_date', 'date', 'bank_id', 'contract_date', 'contract_number', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
             $append_rows = [];
 
             $header2 = ['تاريخ الاستحقاق الجديد', 'تاريخ الكتاب', 'صادر عن', 'رقم الكتاب'];
@@ -1357,7 +1358,7 @@ class GenerateReportsController extends Controller
                     }
                 });
                 $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
-                $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
+                $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_id','number','matter','equ_val_sy','currency','value','bidder_name'];
                 $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             } else {
 
@@ -1379,7 +1380,7 @@ class GenerateReportsController extends Controller
                 });
                 
                 $header = ['اسم المصرف', 'رقم الشيك', 'موضوع العرض | المناقصة', 'المعادل السوري', 'نوع العملة', 'قيمة التأمينات', 'اسم العارض'];
-                $cols = ['bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                $cols = ['bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                 $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             }
         } else {
@@ -1432,7 +1433,7 @@ class GenerateReportsController extends Controller
                     }
                 });
                 $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
-                $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
+                $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_id','number','matter','equ_val_sy','currency','value','bidder_name'];
                 $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             } else {
 
@@ -1457,7 +1458,7 @@ class GenerateReportsController extends Controller
                 });
                 
                 $header = ['اسم المصرف', 'رقم الشيك', 'موضوع العرض | المناقصة', 'المعادل السوري', 'نوع العملة', 'قيمة التأمينات', 'اسم العارض'];
-                $cols = ['bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                $cols = ['bank_id', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
                 $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             }
         }
@@ -1498,9 +1499,14 @@ class GenerateReportsController extends Controller
                 foreach ($cols as $col) {
                     if ($col == 'equ_val_sy') {
                         $sheet->setCellValue($c . $r, ($row[$col] == null ? $row['value'] : $row[$col]));
-                    } else {
-                        $sheet->setCellValue($c . $r, $row[$col]);
+                        continue;
                     }
+                    if ($col == 'bank_id') {
+                        $sheet->setCellValue($c . $r, ($row[$col] == null ? $row['value'] : (Bank::find($row[$col])->name)));
+                        continue;
+                    }
+                    $sheet->setCellValue($c . $r, $row[$col]);
+                    
                     ++$c;
                 }
                 ++$r;
@@ -1533,6 +1539,10 @@ class GenerateReportsController extends Controller
                         foreach ($cols as $col) {
                             if ($col == 'equ_val_sy') {
                                 $fun_string .= "<td>" . ($row[$col] == null ? $row['value'] : $row[$col]) . "</td>";
+                                continue;
+                            }
+                            if ($col == 'bank_id') {
+                                $fun_string .= "<td>" . ($row[$col] == null ? $row['value'] : (Bank::find($row[$col])->name)) . "</td>";
                                 continue;
                             }
                             $fun_string .= "<td>" . $row[$col] . "</td>";
@@ -1614,9 +1624,15 @@ class GenerateReportsController extends Controller
                 foreach ($cols as $col) {
                     if ($col == 'equ_val_sy') {
                         $sheet->setCellValue($c . $r, ($row[$col] == null ? $row['value'] : $row[$col]));
-                    } else {
-                        $sheet->setCellValue($c . $r, $row[$col]);
+                        continue;
                     }
+                    if ($col == 'bank_id') {
+                        $sheet->setCellValue($c . $r, ($row[$col] == null ? $row['value'] : (Bank::find($row[$col])->name)));
+                        continue;
+                    }
+
+                    $sheet->setCellValue($c . $r, $row[$col]);
+                    
                     ++$c;
                 }
                 ++$r;
@@ -1648,6 +1664,10 @@ class GenerateReportsController extends Controller
                         foreach ($cols as $col) {
                             if ($col == 'equ_val_sy') {
                                 $fun_string .= "<td>" . ($row[$col] == null ? $row['value'] : $row[$col]) . "</td>";
+                                continue;
+                            }
+                            if ($col == 'bank_id') {
+                                $fun_string .= "<td>" . ($row[$col] == null ? $row['value'] : (Bank::find($row[$col])->name)) . "</td>";
                                 continue;
                             }
                             $fun_string .= "<td>" . $row[$col] . "</td>";

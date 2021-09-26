@@ -75,10 +75,10 @@
                 @enderror
             </div>
             <div class="form-group col-md-4">
-                <label for="bank_name">اسم المصرف المسحوب عليه الشيك</label>
-                <select type="text" class="form-control" id="bank_name" name="bank_name">
+                <label for="bank_id">اسم المصرف المسحوب عليه الشيك</label>
+                <select type="text" class="form-control" id="bank_id" name="bank_id">
                     @foreach ($banks as $bank)
-                        <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name', $check->bank_name)) selected="selected" @endif>{{ $bank->name }}</option>
+                        <option value="{{ $bank->id }}" @if ($bank->id == old('bank_id', $check->bank_id)) selected="selected" @endif>{{ $bank->name }}</option>
                     @endforeach
                 </select>
             </div>

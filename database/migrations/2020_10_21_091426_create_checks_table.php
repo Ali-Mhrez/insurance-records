@@ -22,7 +22,8 @@ class CreateChecksTable extends Migration
             $table->string('matter',30);
             $table->string('number')->unique();
             $table->date('date');
-            $table->string('bank_name');
+            $table->unsignedBigInteger('bank_id');
+            $table->foreign('bank_id')->references('id')->on('banks')->onUpdate('cascade');
             $table->date('merit_date');
             $table->enum('status',['مدخل','محرر','مصادر']);
             $table->text('notes')->nullable();

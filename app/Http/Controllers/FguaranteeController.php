@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\Fguarantee;
 use App\Models\FguaranteeBook;
 use App\Models\FguaranteeResolution;
+use App\Models\Bank;
 use Carbon\Carbon;
 
 class FguaranteeController extends Controller
@@ -25,7 +26,9 @@ class FguaranteeController extends Controller
         $guarantee = Fguarantee::find($id);
         $books = $guarantee->books()->get();
         $resolution = $guarantee->resolution()->get();
-        return view('fguarantee.show', ['guarantee' => $guarantee, 'books' => $books, 'resolution' => $resolution]);
+        $bank = Bank::find($guarantee->bank_id)->name;
+        return view('fguarantee.show', 
+            ['guarantee' => $guarantee, 'books' => $books, 'resolution' => $resolution, 'bank_name' => $bank]);
     }
 
     public function create() {
@@ -43,7 +46,7 @@ class FguaranteeController extends Controller
         $data->contract_date=$request->contract_date;
         $data->number = $request->number;
         $data->date = $request->date;
-        $data->bank_name = $request->bank_name;
+        $data->bank_id = $request->bank_id;
         $data->merit_date = Carbon::parse($request->date)->addYears(3);
         $data->status = $request->status;
         $data->type = $request->type;
@@ -162,7 +165,7 @@ class FguaranteeController extends Controller
         $data['contract_date'] = $request->contract_date;
         $data['number'] = $request->number;
         $data['date'] = $request->date;
-        $data['bank_name'] = $request->bank_name;
+        $data['bank_id'] = $request->bank_id;
         $data['merit_date'] = Carbon::parse($request->date)->addYears(3);
         $data['status'] = $request->status;
         $data['type'] = $request->type;

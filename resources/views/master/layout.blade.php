@@ -592,26 +592,26 @@
                    $("#bankUpdate").html('');
 
                } else {
-                   var htmlC= '<label for="bank_name">اسم المصرف الكفيل</label>'+
-                        ' <select type="text" name="bank_name" id="bank_name" class="form-control @error('bank_name') is-invalid @enderror">'+
+                   var htmlC= '<label for="bank_id">اسم المصرف الكفيل</label>'+
+                        ' <select type="text" name="bank_id" id="bank_id" class="form-control @error('bank_id') is-invalid @enderror">'+
                          '    <option value="" selected="selected">- اختر البنك -</option>'+
                         '     @foreach ($banks ?? '' as $bank)'+
-                         '        <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name'))'+
+                         '        <option value="{{ $bank->id }}" @if ($bank->id == old('bank_id'))'+
                         '             selected="selected"'+
                         '     @endif'+
                         '     >{{ $bank->name }}</option>'+
                           '   @endforeach </select>'+
-                      '   @error('bank_name') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
+                      '   @error('bank_id') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
 
-                      var htmlU= '<label for="bank_name">اسم المصرف الكفيل</label>'+
-                        ' <select type="text" name="bank_name" id="bank_name" class="form-control @error('bank_name') is-invalid @enderror">'+
+                      var htmlU= '<label for="bank_id">اسم المصرف الكفيل</label>'+
+                        ' <select type="text" name="bank_id" id="bank_id" class="form-control @error('bank_id') is-invalid @enderror">'+
                         '     @foreach ($banks ?? '' as $bank)'+
-                         '        <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name'))'+
+                         '        <option value="{{ $bank->id }}" @if ($bank->id == old('bank_id'))'+
                         '             selected="selected"'+
                         '     @endif'+
                         '     >{{ $bank->name }}</option>'+
                           '   @endforeach </select>'+
-                      '   @error('bank_name') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
+                      '   @error('bank_id') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
                    $("#bankCreate").html(htmlC);
                    $("#bankUpdate").html(htmlU);
                }
@@ -636,25 +636,25 @@
                    $("#bankUpdate").html('');
 
                } else {
-                   var htmlC= '<label for="bank_name">اسم المصرف الكفيل</label>'+
-                        ' <select type="text" name="bank_name" id="bank_name" class="form-control @error('bank_name') is-invalid @enderror">'+
+                   var htmlC= '<label for="bank_id">اسم المصرف الكفيل</label>'+
+                        ' <select type="text" name="bank_id" id="bank_id" class="form-control @error('bank_id') is-invalid @enderror">'+
                          '  <option value="" selected="selected">- اختر البنك -</option>'+
                         '     @foreach ($banks ?? '' as $bank)'+
-                         '        <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name'))'+
+                         '        <option value="{{ $bank->id }}" @if ($bank->id == old('bank_id'))'+
                         '             selected="selected"'+
                         '     @endif'+
                         '     >{{ $bank->name }}</option>'+
                           '   @endforeach </select>'+
-                      '   @error('bank_name') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
-                      var htmlU= '<label for="bank_name">اسم المصرف الكفيل</label>'+
-                        ' <select type="text" name="bank_name" id="bank_name" class="form-control @error('bank_name') is-invalid @enderror">'+
+                      '   @error('bank_id') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
+                      var htmlU= '<label for="bank_id">اسم المصرف الكفيل</label>'+
+                        ' <select type="text" name="bank_id" id="bank_id" class="form-control @error('bank_id') is-invalid @enderror">'+
                         '     @foreach ($banks ?? '' as $bank)'+
-                         '        <option value="{{ $bank->name }}" @if ($bank->name == old('bank_name'))'+
+                         '        <option value="{{ $bank->id }}" @if ($bank->id == old('bank_id'))'+
                         '             selected="selected"'+
                         '     @endif'+
                         '     >{{ $bank->name }}</option>'+
                           '   @endforeach </select>'+
-                      '   @error('bank_name') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
+                      '   @error('bank_id') <li class=" alert alert-danger">{{ $message }}</li>@enderror';
                    $("#bankCreate").html(htmlC);
                    $("#bankUpdate").html(htmlU);
                }

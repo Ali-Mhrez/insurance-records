@@ -48,7 +48,7 @@
             <th class="col-md-2">الحالة</th>
             <td class="col-md-4">{{ $check->status }}</td>
             <th class="col-md-2">اسم المصرف المحسوب عليه الشيك</th>
-            <td class="col-md-4">{{ $check->bank_name }}</td>
+            <td class="col-md-4">{{ $bank_name }}</td>
         </tr>
         <tr class="d-flex">
             <th class="col-md-2">ملاحظات</th>

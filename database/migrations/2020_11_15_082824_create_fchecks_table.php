@@ -24,7 +24,8 @@ class CreateFchecksTable extends Migration
             $table->date('contract_date');
             $table->string('number')->unique();
             $table->date('date');
-            $table->string('bank_name');
+            $table->unsignedBigInteger('bank_id');
+            $table->foreign('bank_id')->references('id')->on('banks')->onUpdate('cascade');
             $table->date('merit_date');
             $table->enum('status',['مدخل','محرر','مصادر','مجدد']);
             $table->integer('renewd_check_id')->unsigned()->nullable();

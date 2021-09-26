@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Check;
 use App\Models\CheckBook;
 use App\Models\CheckResolution;
+use App\Models\Bank;
 use Carbon\Carbon;
 
 class CheckController extends Controller
@@ -36,7 +37,7 @@ class CheckController extends Controller
         $data->matter = $request->matter;
         $data->number = $request->number;
         $data->date = $request->date;
-        $data->bank_name = $request->bank_name;
+        $data->bank_id = $request->bank_id;
         $data->merit_date = Carbon::parse($request->date)->addYears(3);
         $data->status = $request->status;
         $data->notes = $request->notes;
@@ -49,7 +50,9 @@ class CheckController extends Controller
         $check = Check::find($id);
         $books = $check->books()->get();
         $resolution = $check->resolution()->get();
-        return view('check.show', ['check' => $check, 'books' => $books, 'resolution' => $resolution]);
+        $bank = Bank::find($check->bank_id)->name;
+        return view('check.show', 
+            ['check' => $check, 'books' => $books, 'resolution' => $resolution, 'bank_name' => $bank]);
     }
 
     public function releaseForm($id) {
@@ -114,7 +117,7 @@ class CheckController extends Controller
         $data['matter'] = $request->matter;
         $data['number'] = $request->number;
         $data['date'] = $request->date;
-        $data['bank_name'] = $request->bank_name;
+        $data['bank_id'] = $request->bank_id;
         $data['merit_date'] = Carbon::parse($request->date)->addYears(3);
         $data['status'] = $request->status;
         $data['notes']= $request->notes;

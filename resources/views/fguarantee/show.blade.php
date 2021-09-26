@@ -57,7 +57,7 @@
         </tr>
         <tr class="d-flex">
             <th class="col-md-2">اسم المصرف الكفيل</th>
-            <td class="col-md-4">{{ $guarantee->bank_name }}</td>
+            <td class="col-md-4">{{ $bank_name }}</td>
             <th class="col-md-2">ملاحظات</th>
             <td class="col-md-4">{{ $guarantee->notes }}</td>
         </tr>

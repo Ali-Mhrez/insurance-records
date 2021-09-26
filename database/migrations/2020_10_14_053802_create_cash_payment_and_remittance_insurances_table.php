@@ -21,7 +21,8 @@ class CreateCashPaymentAndRemittanceInsurancesTable extends Migration
             $table->integer('equ_val_sy')->nullable();
             $table->string('matter');
             $table->string('number');
-            $table->string('bank_name')->nullable();
+            $table->unsignedBigInteger('bank_id')->nullable();
+            $table->foreign('bank_id')->references('id')->on('banks')->onUpdate('cascade');
             $table->date('date');
             $table->enum('status', ['مدخلة', 'محررة', 'مصادرة']);
             $table->enum('type', ['دفعة نقدية', 'حوالة']);

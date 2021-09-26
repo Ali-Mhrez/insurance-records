@@ -47,7 +47,7 @@
             <th class="col-md-2">الحالة</th>
             <td class="col-md-4">{{ $payment->status }}</td>
             <th class="col-md-2">اسم المصرف</th>
-            <td class="col-md-4">{{ $payment->bank_name ?? 'لايوجد' }}</td>
+            <td class="col-md-4">{{ $bank_name ?? 'لايوجد' }}</td>
         </tr>
         <tr class="d-flex">
             <th class="col-md-2">ملاحظات</th>
