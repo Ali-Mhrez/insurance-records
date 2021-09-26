@@ -10,6 +10,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item active">البنوك</li>
+                    <li class="breadcrumb-item "><a href="{{ route('bank.list') }}">البنوك <i class="fa fa-table" aria-hidden="true"></i></a></li>
                     <li class="breadcrumb-item"><a href="{{route('welcome')}}">الرئيسية <i class="fa fa-tachometer-alt"></i></a></li>
 
                 </ol>

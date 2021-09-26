@@ -6,6 +6,8 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item active">تعديل دفعة نقدية | حوالة نهائية <i class="fa fa-plus"></i></li>
+    <li class="breadcrumb-item "><a href="{{ route('fpayment.list') }}">الدفعات | الحوالات النهائية <i class="fa fa-table" aria-hidden="true"></i></a>
+    </li>
     <li class="breadcrumb-item"><a href="{{route('welcome')}}"> الرئيسية <i class="fa fa-tachometer-alt"></i></a></li>
 @endsection
 

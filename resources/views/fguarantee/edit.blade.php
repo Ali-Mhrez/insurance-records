@@ -10,7 +10,7 @@
         <a href="{{ route('fguarantee.show', ['id' => $guarantee->id]) }}"><i class="fa fa-id-card-o"></i> عرض الكفالة
             النهائية <i class="fa fa-address-card" aria-hidden="true"></i></a>
     </li>
-    <li class="breadcrumb-item "><a href="/fguarantees">الكفالات النهائية <i class="fa fa-table" aria-hidden="true"></i></a>
+    <li class="breadcrumb-item "><a href="{{ route('fguarantee.list') }}">الكفالات النهائية <i class="fa fa-table" aria-hidden="true"></i></a>
     </li>
     <li class="breadcrumb-item"><a href="{{route('welcome')}}">الرئيسية <i class="fa fa-tachometer-alt"></i></a></li>
 @endsection

@@ -10,7 +10,7 @@
         <a href="{{ route('fcheck.show', ['id' => $check->id]) }}"><i class="fa fa-id-card-o"></i> عرض الشيك
             النهائي <i class="fa fa-address-card" aria-hidden="true"></i></a>
     </li>
-    <li class="breadcrumb-item "><a href="/fchecks">الشيكات النهائية <i class="fa fa-table" aria-hidden="true"></i></a>
+    <li class="breadcrumb-item "><a href="{{ route('fcheck.list') }}">الشيكات النهائية <i class="fa fa-table" aria-hidden="true"></i></a>
     </li>
     <li class="breadcrumb-item"><a href="{{ route('welcome') }}">الرئيسية <i class="fa fa-tachometer-alt"></i></a></li>
 @endsection

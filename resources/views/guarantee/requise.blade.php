@@ -10,7 +10,7 @@
     <a href="{{ route('guarantee.show', ['id' => $guarantee->id]) }}"><i class="fa fa-id-card-o"></i> عرض الكفالة
         البدائية <i class="fa fa-address-card" aria-hidden="true"></i></a>
 </li>
-<li class="breadcrumb-item "><a href="/guarantees">الكفالات البدائية <i class="fa fa-table" aria-hidden="true"></i></a>
+<li class="breadcrumb-item "><a href="{{ route('guarantee.list') }}">الكفالات البدائية <i class="fa fa-table" aria-hidden="true"></i></a>
 </li>
 <li class="breadcrumb-item"><a href="{{route('welcome')}}">الرئيسية <i class="fa fa-tachometer-alt"></i></a></li>
 @endsection

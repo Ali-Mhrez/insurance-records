@@ -9,7 +9,7 @@
 <li class="breadcrumb-item ">
     <a href="{{ route('payment.show', ['id' => $payment->id]) }}"><i class="fa fa-id-card-o"></i> عرض الدفعة | الحوالة <i class="fa fa-address-card" aria-hidden="true"></i></a>
 </li>
-<li class="breadcrumb-item "><a href="/payments">الدفعات | الحوالات البدائية <i class="fa fa-table" aria-hidden="true"></i></a>
+<li class="breadcrumb-item "><a href="{{ route('payment.list') }}">الدفعات | الحوالات البدائية <i class="fa fa-table" aria-hidden="true"></i></a>
 </li>
 <li class="breadcrumb-item"><a href="{{route('welcome')}}">الرئيسية <i class="fa fa-tachometer-alt"></i></a></li>
 @endsection
