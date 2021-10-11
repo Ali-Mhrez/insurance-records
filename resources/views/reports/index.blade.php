@@ -106,12 +106,12 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="detailed_report[]" id="pdf1" value="pdf"
+                                        <input class="pdf custom-control-input" type="checkbox" name="detailed_report[]" id="pdf1" value="pdf"
                                          @if(old('detailed_report') !== null)  @if (in_array('pdf',old('detailed_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="pdf1" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="detailed_report[]" id="excel1" value="excel"
+                                        <input class="excel custom-control-input" type="checkbox" name="detailed_report[]" id="excel1" value="excel"
                                          @if(old('detailed_report') !== null)  @if (in_array('excel',old('detailed_report'))) checked @endif  @else{ '' } @endif>
                                         <label for="excel1" class="custom-control-label">Excel</label>
                                     </div>
@@ -153,12 +153,12 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="summary_report[]" id="pdf2"
+                                        <input class="pdf custom-control-input" type="checkbox" name="summary_report[]" id="pdf2"
                                             value="pdf" @if(old('summary_report') !== null)  @if (in_array('pdf',old('summary_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="pdf2" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="summary_report[]" id="excel2"
+                                        <input class="excel custom-control-input" type="checkbox" name="summary_report[]" id="excel2"
                                             value="excel" @if(old('summary_report') !== null)  @if (in_array('excel',old('summary_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="excel2" class="custom-control-label">Excel</label>
                                     </div>
@@ -217,12 +217,12 @@
 
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="owed_report[]" id="pdf3" value="pdf"
+                                        <input class="pdf custom-control-input" type="checkbox" name="owed_report[]" id="pdf3" value="pdf"
                                          @if(old('owed_report') !== null)  @if (in_array('pdf',old('owed_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="pdf3" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="owed_report[]" id="excel3" value="excel"
+                                        <input class="excel custom-control-input" type="checkbox" name="owed_report[]" id="excel3" value="excel"
                                          @if(old('owed_report') !== null)  @if (in_array('excel',old('owed_report'))) checked @endif  @else{ '' } @endif>
                                         <label for="excel3" class="custom-control-label">Excel</label>
                                     </div>
@@ -263,12 +263,12 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="comprehensive_report[]" id="pdf4"
+                                        <input class="pdf custom-control-input" type="checkbox" name="comprehensive_report[]" id="pdf4"
                                             value="pdf" @if(old('comprehensive_report') !== null)  @if (in_array('pdf',old('comprehensive_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="pdf4" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="comprehensive_report[]" id="excel4"
+                                        <input class="excel custom-control-input" type="checkbox" name="comprehensive_report[]" id="excel4"
                                             value="excel" @if(old('comprehensive_report') !== null)  @if (in_array('excel',old('comprehensive_report'))) checked @endif   @else{ '' } @endif>
                                         <label for="excel4" class="custom-control-label">Excel</label>
                                     </div>
@@ -315,12 +315,12 @@
                                 </div>
                                 <div class="row justify-content-center">
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="special_report[]" id="pdf5"
+                                        <input class="pdf custom-control-input" type="checkbox" name="special_report[]" id="pdf5"
                                             value="pdf">
                                         <label for="pdf5" class="custom-control-label">PDF</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" name="special_report[]" id="excel5"
+                                        <input class="excel custom-control-input" type="checkbox" name="special_report[]" id="excel5"
                                             value="excel">
                                         <label for="excel5" class="custom-control-label">Excel</label>
                                     </div>
@@ -487,5 +487,27 @@ $(function() {
 });
 </script> --}}
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.pdf').click(function() {
+                var checkedBox = $(this)[0].checked;
+                if (checkedBox === true) {
+                    $(".excel").prop('checked', false);      
+                } else {
+                    $(".excel").removeAttr('checked');                    
+                }
+            });
+        });
 
+        $(document).ready(function(){
+            $('.excel').click(function() {
+            var checkedBox = $(this)[0].checked;
+                if (checkedBox === true) {
+                    $(".pdf").prop('checked', false);                     
+                } else {
+                    $(".pdf").removeAttr('checked');                       
+                }
+            });
+        });
+    </script>
 @endsection
