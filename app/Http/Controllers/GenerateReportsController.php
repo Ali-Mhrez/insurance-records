@@ -16,7 +16,7 @@ use Dompdf\Dompdf;
 use Illuminate\Support\Carbon;
 use JeroenNoten\LaravelAdminLte\Components\Form\Select;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer as Writer;
 
 class GenerateReportsController extends Controller
 {
@@ -1488,6 +1488,7 @@ class GenerateReportsController extends Controller
             $cols = array_reverse($cols);
             $header = array_reverse($header);
             $spreadsheet = new Spreadsheet();
+            $spreadsheet->getActiveSheet()->setRightToLeft(true);
             $sheet = $spreadsheet->getActiveSheet();
 
             $sheet->fromArray($header, NULL);
@@ -1511,8 +1512,12 @@ class GenerateReportsController extends Controller
                 }
                 ++$r;
             }
-            $writer = new Xlsx($spreadsheet);
-            $writer->save($filename . '.xlsx');
+            $writer = new Writer\Xls($spreadsheet);
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="myfile.xlsx"');
+            header('Cache-Control: max-age=0');
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+            $writer->save('php://output');
         }
 
         if ($isPDF) {
