@@ -487,6 +487,10 @@ $(function() {
 });
 </script> --}}
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+@endsection
+
+@section("scripts")
     <script>
         $(document).ready(function(){
             $('.pdf').click(function() {
@@ -494,6 +498,7 @@ $(function() {
                 if (checkedBox === true) {
                     $(".excel").prop('checked', false);      
                 } else {
+                    alert("false");
                     $(".excel").removeAttr('checked');                    
                 }
             });
@@ -510,4 +515,4 @@ $(function() {
             });
         });
     </script>
-@endsection
+    @endsection
