@@ -61,6 +61,11 @@ Route::get('/userEdit/{id}', [UserController::class, 'edit'])->name('user.edit')
 Route::get('/userUpdate/{id}', [UserController::class, 'update'])->name('user.update');
 
 Route::get('/userDelete/{id}', [UserController::class, 'delete'])->name('user.delete');
+
+Route::get('/userReset/{id}', [UserController::class, 'resetPassword'])->name('user.reset');
+
+Route::get('/userResetShow/{id}', [UserController::class, 'resetShow'])->name('user.resetShow');
+
 });
 
 //------------------------------PasswordController------------------------------

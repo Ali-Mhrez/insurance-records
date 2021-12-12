@@ -154,4 +154,24 @@ class UserController extends Controller
         session()->flash('warning', 'تم حذف المستخدم بنجاح');
         return redirect()->action([UserController::class, 'index']);
     }
+
+        public function resetPassword ($id){
+        $user = User::find($id);
+        $password = Str::random(6);
+        $user->password = Hash::make($password);
+        $user->save();
+        session()->flash('success', 'تم إعادة تعيين كلمة المرور بنجاح');
+        return Redirect::route('user.resetShow', [$user])->with(['password' => $password]);
+
+    }
+
+    protected function resetShow($id)
+    {
+        $user = User::find($id);
+        $name = $user->name;
+        $username = $user->username;
+        $password = session()->get('password');
+        $toastr = session()->get('toastr');
+        return view('users.reset', ['name' => $name, 'username' =>  $username, 'password' => $password, 'toastr' => $toastr]);
+    }
 }
