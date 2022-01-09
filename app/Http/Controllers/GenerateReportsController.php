@@ -1349,12 +1349,104 @@ class GenerateReportsController extends Controller
                 $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             } else {
 
+                $checks = DB::table('checks')
+                        ->where('status', 'مدخل')
+                        ->get();
+
+                $data = collect($checks)->map(function($collection, $key) {
+
+                    $merit = strtotime($collection->merit_date);
+                    $today = strtotime(date("Y-m-d"));
+
+                    if ($merit >= $today) {
+                        $diff = $merit - $today;
+                        $years = floor($diff / (365*60*60*24));
+                        $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                        $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+                    }
+                });
+                
+                $header = ['اسم المصرف', 'رقم الشيك', 'موضوع العرض | المناقصة', 'المعادل السوري', 'نوع العملة', 'قيمة التأمينات', 'اسم العارض'];
+                $cols = ['bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             }
         } else {
             if ($report_type == 'الكفالات') {
+                $guarantees = DB::table('fguarantees')
+                        ->where(function ($query){
+                            $query ->where('type', 'تأمينات')
+                            ->orwhere('type', 'سلف');
+                        })
+                        ->where(function ($query){
+                            $query ->where('status', 'مدخلة')
+                            ->orwhere('status', 'ممددة من القسم')
+                            ->orwhere('status', 'ممددة من البنك');
+                        })
+                        ->get();
 
+                $data = collect($guarantees)->map(function($collection, $key) {
+
+                    $book = DB::table('fguarantee_books')
+                    ->where('guarantee_id', '=', $collection->id)
+                    ->latest('date')
+                    ->get();
+
+                    if (count($book) > 0) {
+                        $merit = strtotime($book[0]->new_merit);
+                    } else {
+                        $merit = strtotime($collection->merit_date);
+                    }
+                    $today = strtotime(date("Y-m-d"));
+
+                    if ($merit >= $today) {
+                        $diff = $merit - $today;
+                        $years = floor($diff / (365*60*60*24));
+                        $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                        $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+
+                        if ($years == 0 && $months == 0 && $days <= 20) {
+                            if (count($book) > 0) {
+                                $collection->btitle = $book[0]->title;
+                                $collection->bdate = $book[0]->date;
+                                $collection->bissued = $book[0]->issued;
+                                $collection->bmerit = $book[0]->new_merit;
+                            } else {
+                                $collection->btitle = 'لايوجد';
+                                $collection->bdate = 'لايوجد';
+                                $collection->bissued = 'لايوجد';
+                                $collection->bmerit = 'لايوجد';
+                            }
+                        }
+                    }
+                });
+                $header = ['الملاحظات','تاريخ الاستحقاق بعد التمديد','النوع','تاريخه','رقم الكتاب','تاريخ الاستحقاق','تاريخ التقديم','اسم المصرف الكفيل','رقم الكفالة','الموضوع','المعادل السوري','العملة','القيمة','اسم العارض'];
+                $cols = ['notes','bmerit','bissued','bdate','btitle','merit_date','date','bank_name','number','matter','equ_val_sy','currency','value','bidder_name'];
+                $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             } else {
 
+                $fchecks = DB::table('fchecks')
+                        ->where(function ($query){
+                            $query ->where('status', 'مدخل')
+                            ->orwhere('status', 'مجدد');
+                        })
+                        ->get();
+
+                $data = collect($fchecks)->map(function($collection, $key) {
+
+                    $merit = strtotime($collection->merit_date);
+                    $today = strtotime(date("Y-m-d"));
+
+                    if ($merit >= $today) {
+                        $diff = $merit - $today;
+                        $years = floor($diff / (365*60*60*24));
+                        $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+                        $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+                    }
+                });
+                
+                $header = ['اسم المصرف', 'رقم الشيك', 'موضوع العرض | المناقصة', 'المعادل السوري', 'نوع العملة', 'قيمة التأمينات', 'اسم العارض'];
+                $cols = ['bank_name', 'number', 'matter', 'equ_val_sy', 'currency', 'value', 'bidder_name'];
+                $this->toPDF($header, $data, $cols, [], $isPDF, $isEXCEL, 'D:/اسم ما');
             }
         }
     }
