@@ -26,11 +26,16 @@
 
         <div class="card-body">
             <div class="row  justify-content-center">
+            <div class="col-lg-8">
+                <a href="{{ route('bank.create') }}" class="btn btn-outline-primary">
+                    إضافة بنك جديد
+                </a>
+            </div>
                 <div class="col-lg-8">
                     <table class="table mt-5">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col" contenteditable='true'>اسم البنك</th>
+                                <th scope="col">اسم البنك</th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
                             </tr>
