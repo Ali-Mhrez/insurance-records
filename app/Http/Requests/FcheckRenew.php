@@ -77,7 +77,6 @@ class FcheckRenew extends Books
             'contract_number.required' => 'يرجى إدخال رقم العقد',
             'contract_number.integer' => 'يرجى إدخال أرقام فقط',
             'contract_number.min' => 'يرجى إدخال قيمة صحيحة (موجبة)',
-            'contract_number.unique' => 'رقم العقد موجود بالفعل',
 
             'contract_date.required' => 'يرجى إدخال تاريخ العقد',
 

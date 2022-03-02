@@ -25,8 +25,8 @@ class FcheckEdit extends CommonRules
     {
         return parent::rules() + [
             'number' => 'bail|required|unique:fchecks,number,'.$this->id,
-            'contract_number' => 'bail|required|integer|min:0|unique:fchecks,contract_number,'.$this->id,
-            'contract_date' => 'bail|required|date',
+            'contract_number' => 'bail|required|integer|min:0',
+            'contract_date' => 'bail|required|date'
         ];
     }
 
@@ -39,7 +39,6 @@ class FcheckEdit extends CommonRules
                 'contract_number.required' => 'يرجى إدخال رقم العقد',
                 'contract_number.integer' => 'يرجى إدخال أرقام فقط',
                 'contract_number.min' => 'يرجى إدخال قيمة صحيحة (موجبة)',
-                'contract_number.unique' => 'رقم العقد موجود بالفعل',
 
                 'contract_date.required' => 'يرجى إدخال تاريخ العقد',
         ];
