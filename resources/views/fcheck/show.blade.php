@@ -18,7 +18,7 @@
 
 @section('table')
     <table class="table table-bordered table-striped table-hover table-sm"
-        style="text-align:center;align-items:center;justify-content:center;">
+        style="table-layout: fixed;text-align:center;align-items:center;justify-content:center;">
         <tr class="d-flex">
             <th class="col-md-2">اسم المتعهد</th>
             <td class="col-md-4">{{ $check->bidder_name }}</td>
@@ -34,8 +34,8 @@
         <tr class="d-flex">
             <th class="col-md-2">رقم الشيك</th>
             <td class="col-md-4">{{ $check->number }}</td>
-            <th class="col-md-2">موضوع العقد | المناقصة</th>
-            <td class="col-md-4">{{ $check->matter }}</td>
+            <th class="col-md-2">الحالة</th>
+            <td class="col-md-4">{{ $check->status }}</td>
         </tr>
         <tr class="d-flex">
             <th class="col-md-2">رقم العقد</th>
@@ -50,10 +50,12 @@
             <td class="col-md-4">{{ $check->merit_date }}</td>
         </tr>
         <tr class="d-flex">
-            <th class="col-md-2">الحالة</th>
-            <td class="col-md-4">{{ $check->status }}</td>
             <th class="col-md-2">اسم المصرف المسحوب عليه الشيك</th>
             <td class="col-md-4">{{ $bank_name }}</td>
+        </tr>
+        <tr class="d-flex">
+            <th class="col-md-2">موضوع العقد | المناقصة</th>
+            <td class="col-md-10">{{ $check->matter }}</td>
         </tr>
         <tr class="d-flex">
             <th class="col-md-2">ملاحظات</th>

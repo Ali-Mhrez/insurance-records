@@ -18,7 +18,7 @@
 
 @section('table')
     <table class="table table-bordered table-striped table-hover table-sm"
-        style="text-align:center;align-items:center;justify-content:center;">
+        style="table-layout: fixed;text-align:center;align-items:center;justify-content:center;">
         <tr class="d-flex">
             <th class="col-md-2">اسم العارض</th>
             <td class="col-md-4">{{ $guarantee->bidder_name }}</td>
@@ -40,8 +40,8 @@
         <tr class="d-flex">
             <th class="col-md-2">رقم الكفالة</th>
             <td class="col-md-4">{{ $guarantee->number }}</td>
-            <th class="col-md-2">الموضوع</th>
-            <td class="col-md-4">{{ $guarantee->matter }}</td>
+            <th class="col-md-2">النوع</th>
+            <td class="col-md-4">{{ $guarantee->type }}</td>
         </tr>
         <tr class="d-flex">
             <th class="col-md-2">تاريخ التقديم</th>
@@ -50,16 +50,19 @@
             <td class="col-md-4">{{ $guarantee->merit_date }}</td>
         </tr>
         <tr class="d-flex">
-            <th class="col-md-2">النوع</th>
-            <td class="col-md-4">{{ $guarantee->type }}</td>
             <th class="col-md-2">الحالة</th>
             <td class="col-md-4">{{ $guarantee->status }}</td>
-        </tr>
-        <tr class="d-flex">
             <th class="col-md-2">اسم المصرف الكفيل</th>
             <td class="col-md-4">{{ $bank_name }}</td>
+        </tr>
+        <tr class="d-flex">
+            <th class="col-md-2">الموضوع</th>
+            <td class="col-md-10">{{ $guarantee->matter }}</td>
+        </tr>
+        <tr class="d-flex">
+            
             <th class="col-md-2">ملاحظات</th>
-            <td class="col-md-4">{{ $guarantee->notes }}</td>
+            <td class="col-md-10">{{ $guarantee->notes }}</td>
         </tr>
 
     </table>

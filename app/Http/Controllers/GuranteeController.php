@@ -171,7 +171,6 @@ class GuranteeController extends Controller
 
     public function update(GuaranteeEdit $request, $id)
     {
-        return "SDFSDF";
         $data = [];
         $data['bidder_name'] = $request->bidder_name;
         $data['value'] = $request->value;

@@ -18,7 +18,7 @@
     <tr>
         <th scope="col">اسم المتعهد</th>
         <th scope="col">القيمة</th>
-        <th scope="col">الموضوع</th>
+        <!-- <th scope="col">الموضوع</th> -->
         <th scope="col">رقم العقد</th>
         <th scope="col">رقم الكفالة</th>
         <th scope="col">النوع</th>
@@ -29,15 +29,15 @@
 <tbody>
     @foreach ($guarantees as $guarantee)
     <tr>
-        <td scope="row">{{$guarantee->bidder_name}}</td>
-        <td scope="row">{{$guarantee->value}}</td>
-        <td scope="row">{{$guarantee->matter}}</td>
-        <td scope="row">{{$guarantee->contract_number}}</td>
-        <td scope="row">{{$guarantee->number}}</td>
-        <td scope="row">{{$guarantee->type}}</td>
-        <td scope="row">{{$guarantee->status}}</td>
-        <td scope="row">
-            <div class="row mb-3">
+        <td scope="col">{{$guarantee->bidder_name}}</td>
+        <td scope="col">{{$guarantee->value}}</td>
+        <!-- <td scope="col">{{$guarantee->matter}}</td> -->
+        <td scope="col">{{$guarantee->contract_number}}</td>
+        <td scope="col">{{$guarantee->number}}</td>
+        <td scope="col">{{$guarantee->type}}</td>
+        <td scope="col">{{$guarantee->status}}</td>
+        <td scope="col">
+            <div>
                 <form action="{{route('fguarantee.show', ['id' => $guarantee->id] )}}"  class="form-inline">
                     <button type="Submit" class="btn btn-primary btn-sm">عرض</button>
                 </form>
@@ -51,7 +51,7 @@
     <tr>
         <th scope="col">اسم المتعهد</th>
         <th scope="col">القيمة</th>
-        <th scope="col">الموضوع</th>
+        <!-- <th scope="col">الموضوع</th> -->
         <th scope="col">رقم العقد</th>
         <th scope="col">رقم الكفالة</th>
         <th scope="col">النوع</th>

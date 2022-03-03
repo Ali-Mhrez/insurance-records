@@ -18,7 +18,7 @@
     <tr>
         <th scope="col">اسم العارض</th>
         <th scope="col">القيمة</th>
-        <th scope="col">الموضوع</th>
+        <!-- <th scope="col">الموضوع</th> -->
         <th scope="col">رقم الدفعة أو الحوالة</th>
         <th scope="col">النوع</th>
         <th scope="col">الحالة</th>
@@ -30,13 +30,13 @@
     <tr>
         <td scope="col">{{$payment->bidder_name}}</td>
         <td scope="col">{{$payment->value}}</td>
-        <td scope="col">{{$payment->matter}}</td>
+        <!-- <td scope="col">{{$payment->matter}}</td> -->
         <td scope="col">{{$payment->number}}</td>
         <td scope="col">{{$payment->type}}</td>
         <td scope="col">{{$payment->status}}</td>
         <td scope="col">
-            <div class="row mb-3">
-                <form action="{{route('fpayment.show', ['id' => $payment->id] )}}" class="form-inline" style="float:left;">
+            <div>
+                <form action="{{route('fpayment.show', ['id' => $payment->id] )}}" class="form-inline">
                     <button type="Submit" class="btn btn-primary btn-sm">عرض</button>
                 </form>
             </div>
@@ -49,7 +49,7 @@
     <tr>
         <th scope="col">اسم العارض</th>
         <th scope="col">القيمة</th>
-        <th scope="col">الموضوع</th>
+        <!-- <th scope="col">الموضوع</th> -->
         <th scope="col">رقم الدفعة أو الحوالة</th>
         <th scope="col">النوع</th>
         <th scope="col">الحالة</th>

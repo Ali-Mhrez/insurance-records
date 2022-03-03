@@ -18,7 +18,7 @@
     <tr>
         <th scope="col">اسم العارض</th>
         <th scope="col">القيمة</th>
-        <th scope="col">موضوع العقد | المناقصة</th>
+        <!-- <th scope="col">موضوع العقد | المناقصة</th> -->
         <th scope="col">رقم الشيك</th>
         <th scope="col"> الحالة</th>
         <th scope="col">عرض الشيك</th>
@@ -27,15 +27,14 @@
 <tbody>
     @foreach ($checks as $check)
         <tr>
-            <td scope="row">{{ $check->bidder_name }}</td>
-            <td scope="row">{{ $check->value }}</td>
-            <td scope="row">{{ $check->matter }}</td>
-            <td scope="row">{{ $check->number }}</td>
-            <td scope="row">{{ $check->status }}</td>
-            <td scope="row">
-                <div class="row mb-3">
-                    <form action="{{ route('check.show', ['id' => $check->id]) }}" class="form-inline"
-                        style="float:left;">
+            <td scope="col">{{ $check->bidder_name }}</td>
+            <td scope="col">{{ $check->value }}</td>
+            <!-- <td scope="col">{{ $check->matter }}</td> -->
+            <td scope="col">{{ $check->number }}</td>
+            <td scope="col">{{ $check->status }}</td>
+            <td scope="col">
+                <div>
+                    <form action="{{ route('check.show', ['id' => $check->id]) }}" class="form-inline">
                         <button type="Submit" class="btn btn-primary btn-sm">عرض</button>
                     </form>
                 </div>
@@ -47,7 +46,7 @@
         <tr>
         <th scope="col">اسم العارض</th>
         <th scope="col">القيمة</th>
-        <th scope="col">موضوع العقد | المناقصة</th>
+        <!-- <th scope="col">موضوع العقد | المناقصة</th> -->
         <th scope="col">رقم الشيك</th>
         <th scope="col"> الحالة</th>
         <th scope="col">عرض الشيك</th>

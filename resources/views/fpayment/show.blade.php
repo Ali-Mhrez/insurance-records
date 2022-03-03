@@ -18,7 +18,7 @@
 
 @section('table')
     <table class="table table-bordered table-striped table-hover table-sm"
-        style="text-align:center;align-items:center;justify-content:center;">
+        style="table-layout: fixed;text-align:center;align-items:center;justify-content:center;">
         <tr class="d-flex">
             <th class="col-md-2">اسم العارض</th>
             <td class="col-md-4">{{ $payment->bidder_name }}</td>
@@ -40,8 +40,8 @@
         <tr class="d-flex">
             <th class="col-md-2">رقم الدفعة أو الحوالة</th>
             <td class="col-md-4">{{ $payment->number }}</td>
-            <th class="col-md-2">الموضوع</th>
-            <td class="col-md-4">{{ $payment->matter }}</td>
+            <th class="col-md-2">الحالة</th>
+            <td class="col-md-4">{{ $payment->status }}</td>
         </tr>
         <tr class="d-flex">
             <th class="col-md-2">تاريخ التقديم</th>
@@ -50,10 +50,12 @@
             <td class="col-md-4">{{ $payment->type }}</td>
         </tr>
         <tr class="d-flex">
-            <th class="col-md-2">الحالة</th>
-            <td class="col-md-4">{{ $payment->status }}</td>
             <th class="col-md-2">اسم المصرف</th>
             <td class="col-md-4">{{ $bank_name ?? 'لايوجد' }}</td>
+        </tr>
+        <tr class="d-flex">
+            <th class="col-md-2">الموضوع</th>
+            <td class="col-md-10">{{ $payment->matter }}</td>
         </tr>
         <tr class="d-flex">
             <th class="col-md-2">ملاحظات</th>

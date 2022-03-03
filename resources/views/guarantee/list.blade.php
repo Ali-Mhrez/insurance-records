@@ -20,7 +20,7 @@
       <th scope="col">اسم العارض</th>
       <th scope="col">القيمة</th>
       <th scope="col">العملة</th>
-      <th scope="col">الموضوع</th>
+      <!-- <th scope="col">الموضوع</th> -->
       <th scope="col">رقم الكفالة</th>
       <th scope="col">النوع</th>
       <th scope="col">الحالة</th>
@@ -33,7 +33,7 @@
       <td scope="col">{{$guarantee->bidder_name}}</td>
       <td scope="col">{{$guarantee->value}}</td>
       <td scope="col">{{$guarantee->currency}}</td>
-      <td scope="col">{{$guarantee->matter}}</td>
+      <!-- <td scope="col">{{$guarantee->matter}}</td> -->
       <td scope="col">{{$guarantee->number}}</td>
       <td scope="col">{{$guarantee->type}}</td>
       <td scope="col">{{$guarantee->status}}</td>
@@ -52,7 +52,7 @@
       <th scope="col">اسم العارض</th>
       <th scope="col">القيمة</th>
       <th scope="col">العملة</th>
-      <th scope="col">الموضوع</th>
+      <!-- <th scope="col">الموضوع</th> -->
       <th scope="col">رقم الكفالة</th>
       <th scope="col">النوع</th>
       <th scope="col">الحالة</th>
