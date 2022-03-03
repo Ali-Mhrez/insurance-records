@@ -19,7 +19,7 @@ class CreateChecksTable extends Migration
             $table->enum('currency', config('currency.CURRENCY'));
             $table->integer('value');
             $table->integer('equ_val_sy')->nullable();
-            $table->string('matter');
+            $table->string('matter',30);
             $table->string('number')->unique();
             $table->date('date');
             $table->unsignedBigInteger('bank_id');
