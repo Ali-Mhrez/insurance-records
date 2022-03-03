@@ -32,7 +32,7 @@ class CommonRules extends FormRequest
             'value' => 'bail|required|integer|min:0',
             'currency' => 'required',
             'equ_val_sy' => 'exclude_if:currency,ليرة سورية|required|integer|min:0',
-            'matter' => 'bail|required|max:30',
+            'matter' => 'bail|required',
             'bank_id' => 'exclude_if:type,دفعة نقدية|required',
             'date' => 'bail|required|date',
             'status' => 'required',
@@ -63,7 +63,6 @@ class CommonRules extends FormRequest
             'equ_val_sy.regex' => 'يرجى التأكد من قيمة التأمين المدخلة',
 
             'matter.required' => 'يرجى إدخال الموضوع',
-            'matter.max' => 'تم تجاوز الحد المسموح به لعدد المحارف (30 محرف كحد أقصى)',
 
             'bank_id.required' => 'يرجى اختيار اسم البنك',
 
