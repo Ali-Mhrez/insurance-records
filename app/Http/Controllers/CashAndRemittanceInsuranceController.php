@@ -15,7 +15,7 @@ use App\Models\Bank;
 class CashAndRemittanceInsuranceController extends Controller
 {
     public function index() {
-        $payments =  CashPaymentAndRemittanceInsurance::where('id', '>=', 1)->orderby('updated_at', 'desc')->paginate(20);
+        $payments =  CashPaymentAndRemittanceInsurance::where('id', '>=', 1)->orderby('updated_at', 'desc')->get();
         return view('payment.list', ['payments' => $payments]);
     }
 

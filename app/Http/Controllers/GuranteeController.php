@@ -18,7 +18,7 @@ class GuranteeController extends Controller
 {
     public function index()
     {
-        $guarantees =  Guarantee::where('id', '>=', 1)->orderby('updated_at', 'desc')->paginate(5);
+        $guarantees =  Guarantee::where('id', '>=', 1)->orderby('updated_at', 'desc')->get();
         return view('guarantee.list', ['guarantees' => $guarantees]);
     }
 

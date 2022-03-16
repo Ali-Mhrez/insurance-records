@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 class FpaymentController extends Controller
 {
     public function index() {
-        $payments =  Fpayment::where('id', '>=', 1)->orderby('updated_at', 'desc')->paginate(5);
+        $payments =  Fpayment::where('id', '>=', 1)->orderby('updated_at', 'desc')->get();
         return view('fpayment.list', ['payments' => $payments]);
     }
 

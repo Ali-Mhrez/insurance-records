@@ -16,7 +16,7 @@ use Carbon\Carbon;
 class CheckController extends Controller
 {
     public function index() {
-        $checks =  Check::where('id', '>=', 1)->orderby('updated_at', 'desc')->paginate(5);
+        $checks =  Check::where('id', '>=', 1)->orderby('updated_at', 'desc')->get();
         return view('check.list', ['checks' => $checks]);
     }
 
