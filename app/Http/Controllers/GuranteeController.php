@@ -13,6 +13,7 @@ use App\Http\Requests\GuaranteeEdit;
 use App\Http\Requests\Books;
 use App\Http\Requests\GuaranteeExtend;
 use App\Http\Requests\Resolutions;
+use Illuminate\Support\Facades\DB;
 
 class GuranteeController extends Controller
 {
@@ -83,6 +84,7 @@ class GuranteeController extends Controller
         $data->save();
         $guarantee->save();
         session()->flash('success', 'تم تعديل البيانات بنجاح');
+        DB::table('owed_guarantees_initial')->where('guarantee_id', $id)->delete();
         return redirect()->action([GuranteeController::class, 'index']);
     }
 
@@ -106,6 +108,7 @@ class GuranteeController extends Controller
         $data->save();
         $guarantee->save();
         session()->flash('success', 'تم تعديل البيانات بنجاح');
+        DB::table('owed_guarantees_initial')->where('guarantee_id', $id)->delete();
         return redirect()->action([GuranteeController::class, 'index']);
     }
 
@@ -129,6 +132,7 @@ class GuranteeController extends Controller
         $data->save();
         $guarantee->save();
         session()->flash('success', 'تم تعديل البيانات بنجاح');
+        DB::table('owed_guarantees_initial')->where('guarantee_id', $id)->delete();
         return redirect()->action([GuranteeController::class, 'index']);
     }
 
@@ -160,6 +164,7 @@ class GuranteeController extends Controller
         $decision->save();
         $guarantee->save();
         session()->flash('success', 'تم تعديل البيانات بنجاح');
+        DB::table('owed_guarantees_initial')->where('guarantee_id', $id)->delete();
         return redirect()->action([GuranteeController::class, 'index']);
     }
 
@@ -189,6 +194,7 @@ class GuranteeController extends Controller
         $data['type'] = $request->type;
         $data['notes'] = $request->notes;
         Guarantee::where('id', $id)->update($data);
+        DB::table('owed_guarantees_initial')->where('guarantee_id', $id)->delete();
         return redirect()->action([GuranteeController::class, 'index']);
     }
 }
