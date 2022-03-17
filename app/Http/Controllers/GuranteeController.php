@@ -85,6 +85,10 @@ class GuranteeController extends Controller
         $guarantee->save();
         session()->flash('success', 'تم تعديل البيانات بنجاح');
         DB::table('owed_guarantees_initial')->where('guarantee_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedInitialGuarantees')
+            ->where('data', '{"id":'.$guarantee->id.',"bidder_name":"'.$guarantee->bidder_name.'","number":"'.$guarantee->number.'"}')
+            ->delete();
         return redirect()->action([GuranteeController::class, 'index']);
     }
 
@@ -109,6 +113,10 @@ class GuranteeController extends Controller
         $guarantee->save();
         session()->flash('success', 'تم تعديل البيانات بنجاح');
         DB::table('owed_guarantees_initial')->where('guarantee_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedInitialGuarantees')
+            ->where('data', '{"id":'.$guarantee->id.',"bidder_name":"'.$guarantee->bidder_name.'","number":"'.$guarantee->number.'"}')
+            ->delete();
         return redirect()->action([GuranteeController::class, 'index']);
     }
 
@@ -133,6 +141,10 @@ class GuranteeController extends Controller
         $guarantee->save();
         session()->flash('success', 'تم تعديل البيانات بنجاح');
         DB::table('owed_guarantees_initial')->where('guarantee_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedInitialGuarantees')
+            ->where('data', '{"id":'.$guarantee->id.',"bidder_name":"'.$guarantee->bidder_name.'","number":"'.$guarantee->number.'"}')
+            ->delete();
         return redirect()->action([GuranteeController::class, 'index']);
     }
 
@@ -165,6 +177,10 @@ class GuranteeController extends Controller
         $guarantee->save();
         session()->flash('success', 'تم تعديل البيانات بنجاح');
         DB::table('owed_guarantees_initial')->where('guarantee_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedInitialGuarantees')
+            ->where('data', '{"id":'.$guarantee->id.',"bidder_name":"'.$guarantee->bidder_name.'","number":"'.$guarantee->number.'"}')
+            ->delete();
         return redirect()->action([GuranteeController::class, 'index']);
     }
 
@@ -195,6 +211,10 @@ class GuranteeController extends Controller
         $data['notes'] = $request->notes;
         Guarantee::where('id', $id)->update($data);
         DB::table('owed_guarantees_initial')->where('guarantee_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedInitialGuarantees')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$request->bidder_name.'","number":"'.$request->number.'"}')
+            ->delete();
         return redirect()->action([GuranteeController::class, 'index']);
     }
 }

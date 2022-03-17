@@ -7,6 +7,10 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Stringable;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Notifications\OwedInitialGuarantees;
+use Illuminate\Support\Facades\Notification;
+use App\Models\Guarantee;
 
 class Kernel extends ConsoleKernel
 {
@@ -58,11 +62,19 @@ class Kernel extends ConsoleKernel
 
             $all_guarantees = array_merge($inserted_guarantees, array_filter($extended_guarantees));
 
+            $users = User::all();
             foreach ($all_guarantees as $guarantee) {
-                DB::table('owed_guarantees_initial')->insertOrIgnore(['guarantee_id' => $guarantee->guarantee_id]);
+                $result = DB::table('owed_guarantees_initial')->insertOrIgnore(['guarantee_id' => $guarantee->guarantee_id]);
+                if ($result) {
+                    foreach($users as $user) {
+                        if ($user->hasPermission('initial_records-input')) {
+                            Notification::send($user, new OwedInitialGuarantees(Guarantee::find($guarantee->guarantee_id)));
+                        }
+                    }
+                }
             }
         })
-        ->name('guarantees_task')
+        ->name('initial_owed_guarantees_task')
         ->withoutOverlapping()
         ->everyMinute()
         ->onSuccess(function (Stringable $output) {

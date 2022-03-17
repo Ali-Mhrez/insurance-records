@@ -28,7 +28,7 @@
     <!-- summernote -->
 	<link rel="stylesheet" href="{{asset('public/plugins/summernote/summernote-bs4.css')}}">
     <!-- Google Font: Source Sans Pro -->
-	<!--<link rel="stylesheet" href="{{asset('/dist/css/fonts.css')}}">
+	<!--<link rel="stylesheet" href="{{asset('/dist/css/fonts.css')}}" -->
     <!-- Bootstrap 4 RTL -->
 	<link rel="stylesheet" href="{{asset('public/dist/css/bootstrap.css')}}">
     <!-- Custom style for RTL -->
@@ -88,32 +88,35 @@
                 <!-- Messages Dropdown Menu -->
 
                 <!-- Notifications Dropdown Menu -->
-                {{-- <li class="nav-item dropdown">
+                <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
-                        <small><span class="badge badge-warning navbar-badge">15</span> </small>
+                        <small><span class="badge badge-warning navbar-badge">{{count(Auth::user()->notifications)}}</span> </small>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">15 Notifications</span>
+                    <div class="dropdown-menu dropdown-menu dropdown-menu-right">
+                        <span class="dropdown-item-left dropdown-header">{{count(Auth::user()->notifications)}} Notifications</span>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
-                            <span class="float-right text-muted text-sm">3 mins</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
+                        @foreach (Auth::user()->notifications as $notification)
+                            <a href="{{ route('guarantee.show', ['id' => $notification->data['id']]) }}" class="dropdown-item" target="_blank">
+                            <p><i class="fas fa-file mr-2"></i> الكفالة ذات الرقم "{{$notification->data['number']}}" مستحقة</p>
+                                    <!-- <span class="float-right text-muted text-sm">3 mins</span> -->
+                                </a>
+                                <div class="dropdown-divider"></div>
+                        @endforeach
+                        <!-- <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
                             <i class="fas fa-users mr-2"></i> 8 friend requests
                             <span class="float-right text-muted text-sm">12 hours</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
+                        </a> -->
+                        <!-- <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
+                            <i class="fas fa-envelope mr-2"></i> 3 new reports
                             <span class="float-right text-muted text-sm">2 days</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        </a> -->
+                        <!-- <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a> -->
                     </div>
-                </li> --}}
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                         <i class="fas fa-expand-arrows-alt"></i>
