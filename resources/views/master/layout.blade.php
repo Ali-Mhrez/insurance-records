@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>سجلات التأمينات</title>
-	<base href="/i-r/">
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/png" href="{{asset('public/dist/img/cbs.png')}}">
@@ -95,16 +94,25 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu dropdown-menu-right">
                         <span class="dropdown-item-left dropdown-header">{{count(Auth::user()->notifications)}} Notifications</span>
-                        <div class="dropdown-divider"></div>
                         @foreach (Auth::user()->notifications as $notification)
-                            <a href="{{ route('guarantee.show', ['id' => $notification->data['id']]) }}" class="dropdown-item" target="_blank">
-                            <p><i class="fas fa-file mr-2"></i> الكفالة ذات الرقم "{{$notification->data['number']}}" مستحقة</p>
-                                    <!-- <span class="float-right text-muted text-sm">3 mins</span> -->
-                                </a>
-                                <div class="dropdown-divider"></div>
+                        <a href="{{ route('guarantee.showGuarantee', ['id1' => $notification->id,'id2'=>$notification->data['id']]) }}" class="dropdown-item" target="_blank">
+                            <div class="info-box">
+                                <!-- Apply any bg-* class to to the icon to color it -->
+                                @if ($notification->unread())
+                                <span class="info-box-icon bg-red"><i class="fas fa-file mr-2"></i></span>
+                                @else
+                                <span class="info-box-icon bg-blue"><i class="fas fa-file mr-2"></i></span>
+                                @endif
+                                <div class="info-box-content">
+                                <span class="info-box-text">كفالة مستحقة جديدة</span>
+                                <span class="info-box-number">{{$notification->data['number']}}</span>
+                                </div><!-- /.info-box-content -->
+                            </div><!-- /.info-box -->
+                        </a>
+                        <!-- <div class="dropdown-divider"></div> -->
+                            <!-- <span class="float-right text-muted text-sm">3 mins</span> -->
                         @endforeach
-                        <!-- <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
+                        <!-- <a href="#" class="dropdown-item">
                             <i class="fas fa-users mr-2"></i> 8 friend requests
                             <span class="float-right text-muted text-sm">12 hours</span>
                         </a> -->
@@ -166,7 +174,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <!-- Brand Logo -->
-            <a href="/" class="brand-link">
+            <a href="{{route('welcome')}}" class="brand-link">
                 <img src="{{asset('public/dist/img/CBS.png')}}" alt="CBS Logo" class="brand-image img-circle elevation-3"
                     style="opacity: .8">
                 <span class="brand-text font-weight-light">مصرف سورية المركزي</span>

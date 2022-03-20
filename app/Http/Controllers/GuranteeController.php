@@ -14,9 +14,15 @@ use App\Http\Requests\Books;
 use App\Http\Requests\GuaranteeExtend;
 use App\Http\Requests\Resolutions;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class GuranteeController extends Controller
 {
+    public function showGuarantee($notificationID, $guaranteeID) {
+        DB::table('notifications')->where('id',$notificationID)->update(['read_at'=>Carbon::now()]);
+        return redirect()->route('guarantee.show', ['id' => $guaranteeID]);
+    }
+
     public function index()
     {
         $guarantees =  Guarantee::where('id', '>=', 1)->orderby('updated_at', 'desc')->paginate(5);

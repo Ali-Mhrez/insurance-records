@@ -25,10 +25,6 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/tt', function () {
-    return view('tt');
-});
-
 Route::get('/', function () {
     return view('welcome');
 })->name("welcome")->middleware('global','auth');
@@ -133,6 +129,8 @@ Route::get('/payments/find/{id}', [CashAndRemittanceInsuranceController::class, 
 Route::get('/guarantees', [GuranteeController::class, 'index'])->name('guarantee.list')->middleware('permission:initial_records-search');
 
 Route::get('/guarantee/create', [GuranteeController::class, 'create'])->name('guarantee.create')->middleware('permission:initial_records-input');
+
+Route::get('/guarantee/showGuarantee/{id1}/{id2}', [GuranteeController::class, 'showGuarantee'])->name('guarantee.showGuarantee')->middleware('permission:initial_records-input');
 
 Route::get('/guarantee/store', [GuranteeController::class, 'store'])->name('guarantee.store')->middleware('permission:initial_records-input');
 
