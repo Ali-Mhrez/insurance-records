@@ -24,11 +24,11 @@ class FcheckRenew extends Books
     public function rules()
     {
         return  parent::rules()+[
-            'bidder_name' => 'bail|required|max:40|string',
+            'bidder_name' => 'bail|required|string',
             'value' => 'bail|required|integer|min:0',
             'currency' => 'required',
             'equ_val_sy' => 'exclude_if:currency,ليرة سورية|bail|required|integer|min:0',
-            'matter' => 'bail|required|max:30',
+            'matter' => 'bail|required',
             'bank_name' => 'bail|required',
             'date' => 'bail|required|date',
             'status' => 'required',
@@ -44,7 +44,6 @@ class FcheckRenew extends Books
         return parent::messages() + [
 
             'bidder_name.required' => 'يرجى إدخال الاسم ',
-            'bidder_name.max' => 'تم تجاوز الحد المسموح به لعدد المحارف (40 محرف كحد أقصى)',
             'bidder_name.alpha' => 'يرجى إدخال أحرف أبجدية فقط',
 
             'value.required' => 'يرجى إدخال قيمة التأمين',
@@ -58,7 +57,6 @@ class FcheckRenew extends Books
             'equ_val_sy.regex' => 'يرجى التأكد من قيمة التأمين المدخلة',
 
             'matter.required' => 'يرجى إدخال الموضوع',
-            'matter.max' => 'تم تجاوز الحد المسموح به لعدد المحارف (30 محرف كحد أقصى)',
 
             'bank_name.required' => 'يرجى اختيار اسم البنك',
 

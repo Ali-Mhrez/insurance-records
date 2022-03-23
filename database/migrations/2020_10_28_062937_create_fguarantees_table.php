@@ -15,11 +15,11 @@ class CreateFguaranteesTable extends Migration
     {
         Schema::create('fguarantees', function (Blueprint $table) {
             $table->id();
-            $table->string('bidder_name', 30);
+            $table->string('bidder_name');
             $table->integer('value');
             $table->enum('currency',config('currency.CURRENCY'));
             $table->integer('equ_val_sy')->nullable();
-            $table->string('matter',30);
+            $table->string('matter');
             $table->string('contract_number');
             $table->date('contract_date');
             $table->string('number')->unique();

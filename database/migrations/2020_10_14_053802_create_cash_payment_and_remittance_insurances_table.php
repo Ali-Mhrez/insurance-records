@@ -15,7 +15,7 @@ class CreateCashPaymentAndRemittanceInsurancesTable extends Migration
     {
         Schema::create('cash_payment_and_remittance_insurances', function (Blueprint $table) {
             $table->id();
-            $table->string('bidder_name', 30);
+            $table->string('bidder_name');
             $table->integer('value');
             $table->enum('currency', config('currency.CURRENCY'));
             $table->integer('equ_val_sy')->nullable();

@@ -28,7 +28,7 @@ class CommonRules extends FormRequest
     {
      //Request $request;
         $commonParams = [
-            'bidder_name' => 'bail|required|max:40|string',
+            'bidder_name' => 'bail|required|string',
             'value' => 'bail|required|integer|min:0',
             'currency' => 'required',
             'equ_val_sy' => 'exclude_if:currency,ليرة سورية|required|integer|min:0',
@@ -49,7 +49,6 @@ class CommonRules extends FormRequest
         return [
 
             'bidder_name.required' => 'يرجى إدخال الاسم ',
-            'bidder_name.max' => 'تم تجاوز الحد المسموح به لعدد المحارف (40 محرف كحد أقصى)',
             'bidder_name.alpha' => 'يرجى إدخال أحرف أبجدية فقط',
 
             'value.required' => 'يرجى إدخال قيمة التأمين',

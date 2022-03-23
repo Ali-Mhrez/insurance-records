@@ -24,7 +24,7 @@ class StoreBanks extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'bail|required|unique:banks|max:30',
+            'name' => 'bail|required|unique:banks',
         ];
     }
 
@@ -33,7 +33,6 @@ class StoreBanks extends FormRequest
         return [
             'name.required' => 'يرجى إدخال اسم البنك',
             'name.unique' => 'هذا الاسم موجود بالفعل',
-            'name.max' => 'الحد الأقصى لاسم البنك 30 محرف',
         ];
     }
 }

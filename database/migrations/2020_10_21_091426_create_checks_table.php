@@ -15,11 +15,11 @@ class CreateChecksTable extends Migration
     {
         Schema::create('checks', function (Blueprint $table) {
             $table->id();
-            $table->string('bidder_name', 30);
+            $table->string('bidder_name');
             $table->enum('currency', config('currency.CURRENCY'));
             $table->integer('value');
             $table->integer('equ_val_sy')->nullable();
-            $table->string('matter',30);
+            $table->string('matter');
             $table->string('number')->unique();
             $table->date('date');
             $table->unsignedBigInteger('bank_id');
