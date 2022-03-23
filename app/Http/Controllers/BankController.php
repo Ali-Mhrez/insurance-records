@@ -12,7 +12,7 @@ class BankController extends Controller
 {
 
     public function index() {
-        $banks = Bank::where('id', '>=', 1)->orderby('updated_at', 'desc')->paginate(5);
+        $banks = Bank::where('id', '>=', 1)->orderby('updated_at', 'desc')->get();
         return view('bank.list', ['banks' => $banks]);
     }
 
