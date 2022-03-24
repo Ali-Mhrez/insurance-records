@@ -93,7 +93,13 @@
                         <small><span class="badge badge-warning navbar-badge">{{count(Auth::user()->notifications)}}</span> </small>
                     </a>
                     <div class="dropdown-menu dropdown-menu dropdown-menu-right">
-                        <span class="dropdown-item-left dropdown-header">{{count(Auth::user()->notifications)}} Notifications</span>
+                        <span class="dropdown-item-left dropdown-header">
+                            @if (count(Auth::user()->notifications) == 0)
+                                لايوجد إشعارات جديدة
+                            @else
+                                {{count(Auth::user()->notifications)}} إشعارات
+                            @endif
+                        </span>
                         @foreach (Auth::user()->notifications as $notification)
                         <a href="{{ route('guarantee.showGuarantee', ['id1' => $notification->id,'id2'=>$notification->data['id']]) }}" class="dropdown-item" target="_blank">
                             <div class="info-box">
@@ -205,16 +211,30 @@
                             </a>
                         </li>
                         @if (Auth::user()->hasRole('administrator'))
-                            <li class="nav-item">
-                                <a href="{{ route('bank.list') }}" class="nav-link">
+                            <li class="nav-item has-treeview">
+                                <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-university"></i>
                                     <p>
                                         البنوك
+                                        <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
+                                <ul class="nav nav-treeview">
+                                        <li class="nav-item">
+                                            <a href="{{ route('bank.list') }}" class="nav-link">
+                                                <i class="far fa-circle fa-xs"></i>
+                                                <p>عرض البنوك</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('bank.create') }}" class="nav-link">
+                                                <i class="far fa-circle fa-xs"></i>
+                                                <p>إضافة بنك جديدة</p>
+                                            </a>
+                                        </li>
+                                </ul>
                             </li>
                         @endif
-
                         <!-- initial records -->
                         @if (Auth::user()->hasPermission('initial_records-read'))
                             <li class="nav-item has-treeview">
