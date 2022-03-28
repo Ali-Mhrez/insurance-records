@@ -12,6 +12,10 @@ use App\Models\CheckBook;
 use App\Models\CheckResolution;
 use App\Models\Bank;
 use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\OwedInitialChecks;
+use Illuminate\Support\Facades\DB;
 
 class CheckController extends Controller
 {
@@ -72,6 +76,11 @@ class CheckController extends Controller
 
         $data->save();
         $check->save();
+        DB::table('owed_checks_initial')->where('check_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedInitialChecks')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$check->bidder_name.'","number":"'.$check->number.'"}')
+            ->delete();
         return redirect()->action([CheckController::class, 'index']);
     }
 
@@ -100,6 +109,11 @@ class CheckController extends Controller
         $data->save();
         $decision->save();
         $check->save();
+        DB::table('owed_checks_initial')->where('check_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedInitialChecks')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$check->bidder_name.'","number":"'.$check->number.'"}')
+            ->delete();
         return redirect()->action([CheckController::class, 'index']);
     }
 
@@ -122,6 +136,39 @@ class CheckController extends Controller
         $data['status'] = $request->status;
         $data['notes']= $request->notes;
         Check::where('id', $id)->update($data);
+        DB::table('owed_checks_initial')->where('check_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedInitialChecks')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$request->bidder_name.'","number":"'.$request->number.'"}')
+            ->delete();
         return redirect()->action([CheckController::class, 'index']);
+    }
+
+    public function __invoke() {
+
+        $limit = Carbon::now()->addDays(20);
+
+        $inserted_checks = DB::table('checks')->select('id as check_id')
+        ->where('status', 'مدخل')
+        ->where('merit_date', '<=', $limit)
+        ->get()
+        ->toArray();
+
+        $users = User::all();
+        foreach ($inserted_checks as $check) {
+            $result = DB::table('owed_checks_initial')->insertOrIgnore(['check_id' => $check->check_id]);
+            if ($result) {
+                foreach($users as $user) {
+                    if ($user->hasPermission('initial_records-input')) {
+                        Notification::send($user, new OwedInitialChecks(Check::find($check->check_id)));
+                    }
+                }
+            }
+        }
+    }
+
+    public function showCheck($notificationID, $checkID) {
+        DB::table('notifications')->where('id',$notificationID)->update(['read_at'=>Carbon::now()]);
+        return redirect()->route('check.show', ['id' => $checkID]);
     }
 }

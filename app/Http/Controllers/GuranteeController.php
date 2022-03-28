@@ -15,14 +15,12 @@ use App\Http\Requests\GuaranteeExtend;
 use App\Http\Requests\Resolutions;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\OwedInitialGuarantees;
 
 class GuranteeController extends Controller
-{
-    public function showGuarantee($notificationID, $guaranteeID) {
-        DB::table('notifications')->where('id',$notificationID)->update(['read_at'=>Carbon::now()]);
-        return redirect()->route('guarantee.show', ['id' => $guaranteeID]);
-    }
-
+{   
     public function index()
     {
         $guarantees =  Guarantee::where('id', '>=', 1)->orderby('updated_at', 'desc')->get();
@@ -222,5 +220,54 @@ class GuranteeController extends Controller
             ->where('data', '{"id":'.$id.',"bidder_name":"'.$request->bidder_name.'","number":"'.$request->number.'"}')
             ->delete();
         return redirect()->action([GuranteeController::class, 'index']);
+    }
+
+    public function __invoke() {
+        $limit = Carbon::now()->addDays(20);
+
+        $inserted_guarantees = DB::table('Guarantees')->select('id as guarantee_id')
+        ->where('status', 'مدخلة')
+        ->where('merit_date', '<=', $limit)
+        ->get()
+        ->toArray();
+
+        $ex_guarantees = DB::table('Guarantees')
+        ->where('status', 'ممددة من القسم')
+        ->orwhere('status', 'ممددة من البنك')
+        ->get()
+        ->toArray();
+        
+        $extended_guarantees = collect($ex_guarantees)->map(function($collection, $key) {
+            $book = DB::table('guarantee_books')
+            ->where('guarantee_id', '=', $collection->id)
+            ->latest()
+            ->limit(1)
+            ->get();
+            
+            $limit = Carbon::now()->addDays(20);
+            if ($book[0]->new_merit <= $limit) {
+                return (object) ['guarantee_id'=> $collection->id];
+            }
+        })->toArray();
+
+        $all_guarantees = array_merge($inserted_guarantees, array_filter($extended_guarantees));
+        
+        $users = User::all();
+        foreach ($all_guarantees as $guarantee) {
+            $result = DB::table('owed_guarantees_initial')->insertOrIgnore(['guarantee_id' => $guarantee->guarantee_id]);
+            if ($result) {
+                
+                foreach($users as $user) {
+                    if ($user->hasPermission('initial_records-input')) {
+                        Notification::send($user, new OwedInitialGuarantees(Guarantee::find($guarantee->guarantee_id)));
+                    }
+                }
+            }
+        }
+    }
+
+    public function showGuarantee($notificationID, $guaranteeID) {
+        DB::table('notifications')->where('id',$notificationID)->update(['read_at'=>Carbon::now()]);
+        return redirect()->route('guarantee.show', ['id' => $guaranteeID]);
     }
 }

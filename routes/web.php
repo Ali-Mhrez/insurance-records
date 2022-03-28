@@ -165,6 +165,8 @@ Route::get('/check/create', [CheckController::class, 'create'])->name('create_ch
 
 Route::get('/check/store', [CheckController::class, 'store'])->name('check.store')->middleware('permission:initial_records-input');
 
+Route::get('/check/showCheck/{id1}/{id2}', [CheckController::class, 'showCheck'])->name('check.showCheck')->middleware('permission:initial_records-input');
+
 Route::get('/check/releaseForm/{id}', [CheckController::class, 'releaseForm'])->name('check.releaseForm')->middleware('permission:initial_records-input');
 
 Route::get('/check/release/{id}', [CheckController::class, 'release'])->name('check.release')->middleware('permission:initial_records-input');

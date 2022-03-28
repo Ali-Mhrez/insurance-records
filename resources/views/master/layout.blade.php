@@ -90,18 +90,24 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
-                        <small><span class="badge badge-warning navbar-badge">{{count(Auth::user()->notifications)}}</span> </small>
+                        <small><span class="badge badge-danger navbar-badge">{{count(Auth::user()->notifications)}}</span> </small>
                     </a>
-                    <div class="dropdown-menu dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-menu dropdown-menu dropdown-menu-right" style="max-height:300px;overflow-y:scroll;">
                         <span class="dropdown-item-left dropdown-header">
-                            @if (count(Auth::user()->notifications) == 0)
+                            @if (Auth::user()->unreadnotifications->count() == 0)
                                 لايوجد إشعارات جديدة
+                            @elseif (Auth::user()->unreadnotifications->count() == 1)
+                                إشعار جديد واحد
                             @else
-                                {{count(Auth::user()->notifications)}} إشعارات
+                                {{(Auth::user()->unreadnotifications->count())}} إشعارات جديدة
                             @endif
                         </span>
                         @foreach (Auth::user()->notifications as $notification)
+                        @if($notification->type == "App\Notifications\OwedInitialChecks")
+                        <a href="{{ route('check.showCheck', ['id1' => $notification->id,'id2'=>$notification->data['id']]) }}" class="dropdown-item" target="_blank"> 
+                        @elseif($notification->type == "App\Notifications\OwedInitialGuarantees")
                         <a href="{{ route('guarantee.showGuarantee', ['id1' => $notification->id,'id2'=>$notification->data['id']]) }}" class="dropdown-item" target="_blank">
+                        @endif
                             <div class="info-box">
                                 <!-- Apply any bg-* class to to the icon to color it -->
                                 @if ($notification->unread())
@@ -110,8 +116,12 @@
                                 <span class="info-box-icon bg-blue"><i class="fas fa-file mr-2"></i></span>
                                 @endif
                                 <div class="info-box-content">
+                                @if($notification->type == "App\Notifications\OwedInitialChecks")
+                                <span class="info-box-text">شيك مستحق جديدة</span>
+                                @elseif($notification->type == "App\Notifications\OwedInitialGuarantees")
                                 <span class="info-box-text">كفالة مستحقة جديدة</span>
-                                <span class="info-box-number">{{$notification->data['number']}}</span>
+                                @endif
+                                <span class="info-box-number" style="white-space: normal;">{{$notification->data['number']}}</span>
                                 </div><!-- /.info-box-content -->
                             </div><!-- /.info-box -->
                         </a>

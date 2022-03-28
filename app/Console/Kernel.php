@@ -4,13 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Stringable;
-use Carbon\Carbon;
-use App\Models\User;
-use App\Notifications\OwedInitialGuarantees;
-use Illuminate\Support\Facades\Notification;
-use App\Models\Guarantee;
+use App\Http\Controllers\GuranteeController;
+use App\Http\Controllers\CheckController;
 
 class Kernel extends ConsoleKernel
 {
@@ -31,57 +26,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->call(new GuranteeController);
+        $schedule->call(new CheckController);
+
         $schedule->call(function () {
-            
-            $limit = Carbon::now()->addDays(20);
-
-            $inserted_guarantees = DB::table('Guarantees')->select('id as guarantee_id')
-            ->where('status', 'مدخلة')
-            ->where('merit_date', '<=', $limit)
-            ->get()
-            ->toArray();
-
-            $ex_guarantees = DB::table('Guarantees')
-            ->where('status', 'ممددة من القسم')
-            ->orwhere('status', 'ممددة من البنك')
-            ->get()
-            ->toArray();
-
-            $extended_guarantees = collect($ex_guarantees)->map(function($collection, $key) {
-                $book = DB::table('guarantee_books')
-                ->where('guarantee_id', '=', $collection->id)
-                ->latest()
-                ->limit(1)
-                ->get();
-                
-                $limit = Carbon::now()->addDays(20);
-                if ($book[0]->new_merit <= $limit) {
-                    return (object) ['guarantee_id'=> $collection->id];
-                }
-            })->toArray();
-
-            $all_guarantees = array_merge($inserted_guarantees, array_filter($extended_guarantees));
-
-            $users = User::all();
-            foreach ($all_guarantees as $guarantee) {
-                $result = DB::table('owed_guarantees_initial')->insertOrIgnore(['guarantee_id' => $guarantee->guarantee_id]);
-                if ($result) {
-                    foreach($users as $user) {
-                        if ($user->hasPermission('initial_records-input')) {
-                            Notification::send($user, new OwedInitialGuarantees(Guarantee::find($guarantee->guarantee_id)));
-                        }
-                    }
-                }
-            }
-        })
-        ->name('initial_owed_guarantees_task')
-        ->withoutOverlapping()
-        ->everyMinute()
-        ->onSuccess(function (Stringable $output) {
-            echo ($output . " sucess");
-        })
-        ->onFailure(function (Stringable $output) {
-            echo ($output. " failure");
         });
     }
 
