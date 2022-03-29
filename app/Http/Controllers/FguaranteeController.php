@@ -13,6 +13,10 @@ use App\Models\FguaranteeBook;
 use App\Models\FguaranteeResolution;
 use App\Models\Bank;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\OwedFinalGuarantees;
 
 class FguaranteeController extends Controller
 {
@@ -78,6 +82,11 @@ class FguaranteeController extends Controller
 
         $data->save();
         $guarantee->save();
+        DB::table('owed_guarantees_final')->where('guarantee_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedFinalGuarantees')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$guarantee->bidder_name.'","number":"'.$guarantee->number.'"}')
+            ->delete();
         return redirect()->action([FguaranteeController::class, 'index']);
     }
 
@@ -98,6 +107,11 @@ class FguaranteeController extends Controller
 
         $data->save();
         $guarantee->save();
+        DB::table('owed_guarantees_final')->where('guarantee_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedFinalGuarantees')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$guarantee->bidder_name.'","number":"'.$guarantee->number.'"}')
+            ->delete();
         return redirect()->action([FguaranteeController::class, 'index']);
     }
 
@@ -118,6 +132,11 @@ class FguaranteeController extends Controller
 
         $data->save();
         $guarantee->save();
+        DB::table('owed_guarantees_final')->where('guarantee_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedFinalGuarantees')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$guarantee->bidder_name.'","number":"'.$guarantee->number.'"}')
+            ->delete();
         return redirect()->action([FguaranteeController::class, 'index']);
     }
 
@@ -146,6 +165,11 @@ class FguaranteeController extends Controller
         $data->save();
         $decision->save();
         $guarantee->save();
+        DB::table('owed_guarantees_final')->where('guarantee_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedFinalGuarantees')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$guarantee->bidder_name.'","number":"'.$guarantee->number.'"}')
+            ->delete();
         return redirect()->action([FguaranteeController::class, 'index']);
     }
 
@@ -171,7 +195,63 @@ class FguaranteeController extends Controller
         $data['type'] = $request->type;
         $data['notes'] = $request->notes;
         Fguarantee::where('id', $id)->update($data);
+        DB::table('owed_guarantees_final')->where('guarantee_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedFinalGuarantees')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$request->bidder_name.'","number":"'.$request->number.'"}')
+            ->delete();
         return redirect()->action([FguaranteeController::class, 'index']);
+    }
+
+    public function __invoke() {
+        $limit = Carbon::now()->addDays(20);
+        
+        $inserted_guarantees = DB::table('fguarantees')->select('id as guarantee_id')
+        ->where('status', 'مدخلة')
+        ->where('merit_date', '<=', $limit)
+        ->get()
+        ->toArray();
+
+        $ex_guarantees = DB::table('fguarantees')
+        ->where('status', 'ممددة من القسم')
+        ->orwhere('status', 'ممددة من البنك')
+        ->get()
+        ->toArray();
+        
+        $extended_guarantees = collect($ex_guarantees)->map(function($collection, $key) {
+            $book = DB::table('fguarantee_books')
+            ->where('fguarantee_id', '=', $collection->id)
+            ->latest()
+            ->limit(1)
+            ->get();
+            
+            $limit = Carbon::now()->addDays(20);
+            if ($book[0]->new_merit <= $limit) {
+                return (object) ['guarantee_id'=> $collection->id];
+            }
+        })->toArray();
+
+        $all_guarantees = array_merge($inserted_guarantees, array_filter($extended_guarantees));
+        
+        $users = User::all();
+        
+        foreach ($all_guarantees as $guarantee) {
+            
+            $result = DB::table('owed_guarantees_final')->insertOrIgnore(['guarantee_id' => $guarantee->guarantee_id]);
+            
+            if ($result) {
+                foreach($users as $user) {
+                    if ($user->hasPermission('final_records-input')) {
+                        Notification::send($user, new OwedFinalGuarantees(Fguarantee::find($guarantee->guarantee_id)));
+                    }
+                }
+            }
+        }
+    }
+
+    public function showGuarantee($notificationID, $guaranteeID) {
+        DB::table('notifications')->where('id',$notificationID)->update(['read_at'=>Carbon::now()]);
+        return redirect()->route('fguarantee.show', ['id' => $guaranteeID]);
     }
 }
 

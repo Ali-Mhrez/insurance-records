@@ -217,6 +217,7 @@ Route::get('/fguarantee/update/{id}', [FguaranteeController::class, 'update'])->
 
 Route::get('/fguarantee/show/{id}', [FguaranteeController::class, 'show'])->name('fguarantee.show')->middleware('permission:final_records-search');
 
+Route::get('/fguarantee/showGuarantee/{id1}/{id2}', [FguaranteeController::class, 'showGuarantee'])->name('fguarantee.showGuarantee')->middleware('permission:final_records-input');
 // ----------------------------------------------FpaymentController----------------------------------------------
 
 Route::get('/fpayments', [FpaymentController::class, 'index'])->name('fpayment.list')->middleware('permission:final_records-search');

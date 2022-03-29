@@ -107,6 +107,8 @@
                         <a href="{{ route('check.showCheck', ['id1' => $notification->id,'id2'=>$notification->data['id']]) }}" class="dropdown-item" target="_blank"> 
                         @elseif($notification->type == "App\Notifications\OwedInitialGuarantees")
                         <a href="{{ route('guarantee.showGuarantee', ['id1' => $notification->id,'id2'=>$notification->data['id']]) }}" class="dropdown-item" target="_blank">
+                        @elseif($notification->type == "App\Notifications\OwedFinalGuarantees")
+                        <a href="{{ route('fguarantee.showGuarantee', ['id1' => $notification->id,'id2'=>$notification->data['id']]) }}" class="dropdown-item" target="_blank">
                         @endif
                             <div class="info-box">
                                 <!-- Apply any bg-* class to to the icon to color it -->
@@ -117,9 +119,11 @@
                                 @endif
                                 <div class="info-box-content">
                                 @if($notification->type == "App\Notifications\OwedInitialChecks")
-                                <span class="info-box-text">شيك مستحق جديدة</span>
+                                <span class="info-box-text">شيك بدائي مستحق جديدة</span>
                                 @elseif($notification->type == "App\Notifications\OwedInitialGuarantees")
-                                <span class="info-box-text">كفالة مستحقة جديدة</span>
+                                <span class="info-box-text">كفالة بدائية مستحقة جديدة</span>
+                                @elseif($notification->type == "App\Notifications\OwedFinalGuarantees")
+                                <span class="info-box-text">كفالة نهائية مستحقة جديدة</span>
                                 @endif
                                 <span class="info-box-number" style="white-space: normal;">{{$notification->data['number']}}</span>
                                 </div><!-- /.info-box-content -->
