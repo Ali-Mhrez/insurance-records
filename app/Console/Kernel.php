@@ -7,6 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Controllers\GuranteeController;
 use App\Http\Controllers\CheckController;
 use App\Http\Controllers\FguaranteeController;
+use App\Http\Controllers\FCheckController;
 
 class Kernel extends ConsoleKernel
 {
@@ -30,6 +31,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(new GuranteeController);
         $schedule->call(new CheckController);
         $schedule->call(new FguaranteeController);
+        $schedule->call(new FCheckController);
         $schedule->call(function () {
         });
     }

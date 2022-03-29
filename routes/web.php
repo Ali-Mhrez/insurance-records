@@ -267,6 +267,8 @@ Route::get('/fcheck/update/{id}', [FcheckController::class, 'update'])->name('fc
 
 Route::get('/fcheck/show/{id}', [FcheckController::class, 'show'])->name('fcheck.show')->middleware('permission:final_records-search');
 
+Route::get('/fcheck/showCheck/{id1}/{id2}', [FcheckController::class, 'showCheck'])->name('fcheck.showCheck')->middleware('permission:final_records-input');
+
 });
 
 

@@ -14,6 +14,10 @@ use App\Models\FcheckResolution;
 use App\Models\Fguarantee;
 use App\Models\Bank;
 use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\OwedFinalChecks;
+use Illuminate\Support\Facades\DB;
 
 class FcheckController extends Controller
 {
@@ -96,6 +100,11 @@ class FcheckController extends Controller
 
         $data->save();
         $check->save();
+        DB::table('owed_final_checks')->where('check_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedFinalChecks')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$check->bidder_name.'","number":"'.$check->number.'"}')
+            ->delete();
         return redirect()->action([FcheckController::class, 'index']);
     }
 
@@ -116,6 +125,11 @@ class FcheckController extends Controller
 
         $data->save();
         $check->save();
+        DB::table('owed_final_checks')->where('check_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedFinalChecks')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$check->bidder_name.'","number":"'.$check->number.'"}')
+            ->delete();
         return redirect()->action([FcheckController::class, 'index']);
     }
 
@@ -144,6 +158,11 @@ class FcheckController extends Controller
         $data->save();
         $decision->save();
         $check->save();
+        DB::table('owed_final_checks')->where('check_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedFinalChecks')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$check->bidder_name.'","number":"'.$check->number.'"}')
+            ->delete();
         return redirect()->action([FcheckController::class, 'index']);
     }
 
@@ -168,6 +187,47 @@ class FcheckController extends Controller
         $data['status'] = $request->status;
         $data['notes'] = $request->notes;
         Fcheck::where('id', $id)->update($data);
+        DB::table('owed_final_checks')->where('check_id', $id)->delete();
+        DB::table('notifications')
+            ->where('type','App\Notifications\OwedFinalChecks')
+            ->where('data', '{"id":'.$id.',"bidder_name":"'.$request->bidder_name.'","number":"'.$request->number.'"}')
+            ->delete();
         return redirect()->action([FcheckController::class, 'index']);
+    }
+
+    public function __invoke() {
+
+        $limit = Carbon::now()->addDays(20);
+
+        $inserted_checks = DB::table('fchecks')->select('id as check_id')
+        ->where('status', 'مدخل')
+        ->where('merit_date', '<=', $limit)
+        ->get()
+        ->toArray();
+
+        $renewed_checks = DB::table('fchecks')->select('id as check_id')
+        ->where('status', 'مجدد')
+        ->where('merit_date', '<=', $limit)
+        ->get()
+        ->toArray();
+
+        $all_checks = array_merge($inserted_checks, $renewed_checks);
+
+        $users = User::all();
+        foreach ($all_checks as $check) {
+            $result = DB::table('owed_final_checks')->insertOrIgnore(['check_id' => $check->check_id]);
+            if ($result) {
+                foreach($users as $user) {
+                    if ($user->hasPermission('final_records-input')) {
+                        Notification::send($user, new OwedFinalChecks(Fcheck::find($check->check_id)));
+                    }
+                }
+            }
+        }
+    }
+
+    public function showCheck($notificationID, $checkID) {
+        DB::table('notifications')->where('id',$notificationID)->update(['read_at'=>Carbon::now()]);
+        return redirect()->route('fcheck.show', ['id' => $checkID]);
     }
 }
