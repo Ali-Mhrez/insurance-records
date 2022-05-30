@@ -109,7 +109,7 @@
                     <div class="row">
                         <div class="form-group col-md-4">
                             <label for="value">قيمة التأمين</label>
-                            <input type="number" class="form-control @error('value') is-invalid @enderror" id="value"
+                            <input type="number" step="0.01" class="form-control @error('value') is-invalid @enderror" id="value"
                                 name="value" placeholder="" value="{{ old('value', $check->value) }}" readonly>
                             @error('value')
                                 <li class=" alert alert-danger">{{ $message }}</li>
@@ -130,7 +130,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label for="equ_val_sy ">المكافئ بالليرة السورية</label>
-                            <input type="number" class="form-control @error('equ_val_sy') is-invalid @enderror"
+                            <input type="number" step="0.01" class="form-control @error('equ_val_sy') is-invalid @enderror"
                                 id="equ_val_sy" name="equ_val_sy" value='{{ old('equ_val_sy', $check->equ_val_sy) }}'
                                 readonly> @error('equ_val_sy')
                                 <li class=" alert alert-danger">{{ $message }}</li>

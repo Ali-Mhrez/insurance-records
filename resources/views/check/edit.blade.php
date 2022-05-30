@@ -46,7 +46,7 @@
         <div class="row">
             <div class="form-group col-md-4">
                 <label for="value">قيمة التأمين</label>
-                <input type="number" class="form-control @error('value') is-invalid @enderror" id="value" name="value"
+                <input type="number" step="0.01" class="form-control @error('value') is-invalid @enderror" id="value" name="value"
                     value="{{ old('value', $check->value) }}">
                 @error('value')
                     <li class=" alert alert-danger">{{ $message }}</li>

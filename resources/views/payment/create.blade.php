@@ -61,7 +61,7 @@
             <div class="row">
                 <div class="form-group col-md-4">
                     <label for="value">قيمة التأمين</label>
-                    <input type="number" class="form-control @error('value') is-inavlid
+                    <input type="number" step="0.01" class="form-control @error('value') is-inavlid
                 @enderror" id="value" name="value" placeholder="" value="{{ old('value') }}">
                     @error('value')
                         <li class=" alert alert-danger">{{ $message }}</li>

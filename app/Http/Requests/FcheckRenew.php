@@ -25,9 +25,9 @@ class FcheckRenew extends Books
     {
         return  parent::rules()+[
             'bidder_name' => 'bail|required|string',
-            'value' => 'bail|required|integer|min:0',
+            'value' => 'bail|required|numeric|min:0',
             'currency' => 'required',
-            'equ_val_sy' => 'exclude_if:currency,ليرة سورية|bail|required|integer|min:0',
+            'equ_val_sy' => 'exclude_if:currency,ليرة سورية|bail|required|numeric|min:0',
             'matter' => 'bail|required',
             'bank_name' => 'bail|required',
             'date' => 'bail|required|date',
@@ -47,12 +47,10 @@ class FcheckRenew extends Books
             'bidder_name.alpha' => 'يرجى إدخال أحرف أبجدية فقط',
 
             'value.required' => 'يرجى إدخال قيمة التأمين',
-            'value.integer' => 'يرجى إدخال قيمة صحيحة (أرقام فقط)',
             'value.min' => 'يرجى إدخال قيمة موجبة',
             'value.regex' => 'يرجى التأكد من قيمة التأمين المدخلة',
 
             'equ_val_sy.required' => 'يرجى إدخال القيمة',
-            'equ_val_sy.integer' => 'يرجى إدخال قيمة صحيحة (أرقام فقط)',
             'equ_val_sy.min' => 'يرجى إدخال قيمة موجبة',
             'equ_val_sy.regex' => 'يرجى التأكد من قيمة التأمين المدخلة',
 

@@ -1590,19 +1590,21 @@ class GenerateReportsController extends Controller
                                 text-align: center;
 
                             }
-                            #report-title {
-                                text-align: center;
-                                font-size: x-large;
-                                padding-bottom: 6px;
-                                color: #800517;
-                            }
+                            div {
+                                display: flex; 
+                                align-items: center; 
+                                align-self: center; 
+                                justify-content: center; 
+                                width: 80%;
+                                margin: 0 auto;
+                              }
 
                         </style>
-                    </head><body>" . $this->title .
-                "<table id='tab' cellspacing='2' cellpadding='5'>" .
+                    </head><body><div>" . $this->title .
+                "</div><table id='tab' cellspacing='2' cellpadding='5'>" .
                 $funny($header, $array_data, $cols, $append_rows) .
                 "</table></body></html>";
-
+                            
             $dompdf = new Dompdf();
             $options = $dompdf->getOptions();
             $dompdf->loadHtml($html);

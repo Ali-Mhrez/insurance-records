@@ -626,7 +626,7 @@
 
                } else {
                    var html = '  <label for="equ_val_sy ">المكافئ بالليرة   السورية</label>' +
-                       '                    <input type="number" class="form-control @error('
+                       '                    <input type="number" step="0.01" class="form-control @error('
                    equ_val_sy ') is-invalid @enderror" id="equ_val_sy" name="equ_val_sy" value="' + currency_value + '"' +
                        '> @error('equ_val_sy')'
                            +'<li class=" alert alert-danger">{{ $message }}</li>'+
@@ -672,7 +672,7 @@
 
                } else {
                    var html = '  <label for="equ_val_sy ">المكافئ بالليرة   السورية</label>'+
-                        '                    <input type="number" class="form-control @error('
+                        '                    <input type="number" step="0.01" class="form-control @error('
                     equ_val_sy ') is-invalid @enderror" id="equ_val_sy" name="equ_val_sy" value="' + currency_value + '"' +
                         '>      @error('equ_val_sy')<li class=" alert alert-danger">{{ $message }}</li>@enderror ';
                    $("#first").html(html);
