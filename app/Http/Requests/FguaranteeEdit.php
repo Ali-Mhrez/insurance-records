@@ -24,6 +24,7 @@ class FguaranteeEdit extends CommonRules
     public function rules()
     {
         return parent::rules() + [
+            'merit_date' => 'bail|required|date|after:date',
             'number' => 'bail|required|unique:fguarantees,number,'.$this->id,
             'contract_number' => 'bail|required|integer|min:0',
             'contract_date' => 'bail|required|date'
@@ -41,6 +42,9 @@ class FguaranteeEdit extends CommonRules
                 'contract_number.min' => 'يرجى إدخال قيمة صحيحة (موجبة)',
 
                 'contract_date.required' => 'يرجى إدخال تاريخ العقد',
+                
+                'merit_date.required' => 'يرجى إدخال التاريخ',
+                'merit_date.after' =>'يجب أن يكون تاريخ الاستحقاق تاريخاً بعد تاريخ تقديم التأمين',
         ];
     }
 }

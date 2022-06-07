@@ -156,6 +156,15 @@
 
                     </div>
                     <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="merit_date">تاريخ الاستحقاق</label>
+                            <input type="date" class="form-control @error('merit_date') is-invalid @enderror" id="merit_date" name="merit_date" value="{{ old('merit_date') }}">
+                            @error('merit_date')
+                            <li class=" alert alert-danger">{{ $message }}</li>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="form-group col-md-12">
                             <label for="notes">ملاحظات</label>
                             <textarea class="form-control @error('notes') is-invalid @enderror" id="notes"

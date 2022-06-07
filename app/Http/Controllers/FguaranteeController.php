@@ -51,7 +51,7 @@ class FguaranteeController extends Controller
         $data->number = $request->number;
         $data->date = $request->date;
         $data->bank_id = $request->bank_id;
-        $data->merit_date = Carbon::parse($request->date)->addYears(3);
+        $data->merit_date = $request->merit_date;
         $data->status = $request->status;
         $data->type = $request->type;
         $data->notes = $request->notes;
@@ -190,7 +190,7 @@ class FguaranteeController extends Controller
         $data['number'] = $request->number;
         $data['date'] = $request->date;
         $data['bank_id'] = $request->bank_id;
-        $data['merit_date'] = Carbon::parse($request->date)->addYears(3);
+        $data['merit_date'] = $request->merit_date;
         $data['status'] = $request->status;
         $data['type'] = $request->type;
         $data['notes'] = $request->notes;
