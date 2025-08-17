@@ -14,7 +14,7 @@ This project is a full-stack web application for managing insurance records. Dev
 - **Other Tools:** Git
 
 ## Getting Started
-This is the initial version of the project. The latest versions are not publicly available due to their sensitive nature.
+This is not the final version of the project. The latest versions are not publicly available due to their sensitive nature.
 
 ## Author
 **Ali Mhrez**
